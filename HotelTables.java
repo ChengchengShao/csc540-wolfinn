@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class HotelTables {
-    static final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/tfei3";
+    static final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/zsun12";
     private static Connection connection = null;
     private static Statement statement = null;
     private static ResultSet result = null;
@@ -241,8 +241,8 @@ public class HotelTables {
     private static void connectToDatabase() throws ClassNotFoundException, SQLException {
         Class.forName("org.mariadb.jdbc.Driver");
 
-        String user = "tfei3";
-        String password = "ft1993king";
+        String user = "zsun12";
+        String password = "5211258";
 
         connection = DriverManager.getConnection(jdbcURL, user, password);
         statement = connection.createStatement();
