@@ -5,13 +5,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class HotelTables {
-    static final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/zsun12";
+    static final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/tfei3";
     private static Connection connection = null;
     private static Statement statement = null;
     private static ResultSet result = null;
 
     public static void main(String[] args) {
         createTables();
+        close();
     }
 
 
@@ -190,8 +191,8 @@ public class HotelTables {
     private static void connectToDatabase() throws ClassNotFoundException, SQLException {
         Class.forName("org.mariadb.jdbc.Driver");
 
-        String user = "zsun12";
-        String password = "5211258";
+        String user = "tfei3";
+        String password = "ft1993king";
 
         connection = DriverManager.getConnection(jdbcURL, user, password);
         statement = connection.createStatement();
@@ -222,7 +223,32 @@ public class HotelTables {
             statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 1;");
 
 
-        } catch (SQLException e) {
-        }
+            } catch (SQLException e) {
+              }
     }
+
+
+    private static void close() {
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		if (statement != null) {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		if (result != null) {
+			try {
+				result.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
   }
