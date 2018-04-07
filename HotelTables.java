@@ -9,7 +9,6 @@ public class HotelTables {
     private static Connection connection = null;
     private static Statement statement = null;
     private static ResultSet result = null;
-}
 
     public static void main(String[] args) {
         createTables();
@@ -255,3 +254,4 @@ public class HotelTables {
         } catch (SQLException e) {
         }
     }
+  }
