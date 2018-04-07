@@ -21,60 +21,50 @@ public class HotelTables {
 
 
             statement.executeUpdate("CREATE TABLE hotel (" +
-                    "hotelID INT NOT NULL," +
+                    "hotelID INT PRIMARY KEY AUTO_INCREMENT," +
                     "hotelName VARCHAR(128) NOT NULL," +
                     "hotelAddress VARCHAR(128) NOT NULL," +
                     "hotelPhoneNumber VARCHAR(128) NOT NULL," +
-                    "hotelManagerID VARCHAR(128) NOT NULL," +
-                    "PRIMARY KEY (hotelID)" +
+                    "hotelManagerID VARCHAR(128) NOT NULL" +
                     ")");
-
             statement.executeUpdate("CREATE TABLE room (" +
-                    "roomID INT NOT NULL," +
+                    "roomId INT PRIMARY KEY AUTO_INCREMENT," +
                     "availability VARCHAR(128) NOT NULL," +
                     "roomCategory VARCHAR(128) NOT NULL," +
                     "nightlyRate FLOAT(5,2) NOT NULL," +
                     "maxAllowedOccupancy INT NOT NULL," +
                     "hotelID INT NOT NULL," +
-                    "PRIMARY KEY (roomID)" +
-                    "CONSTRAINT FK_room FOREIGN KEY (hotelID) REFERENCES hotel(hotelID) ON UPDATE CASCADE" +
+                    "CONSTRAINT hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID)" +
+                    "ON UPDATE CASCADE" +
                     ")");
-
-
             statement.executeUpdate("CREATE TABLE staff (" +
-                    "staffID INT NOT NULL," +
-                    "age INT NOT NULL," +
+                    "staffID INT PRIMARY KEY AUTO_INCREMENT," +
+                    "age INT not NULL," +
                     "name VARCHAR(128) NOT NULL," +
                     "department VARCHAR(128) NOT NULL," +
                     "contactInformation INT NOT NULL," +
                     "hotelID INT NOT NULL," +
                     "jobtitle VARCHAR(128) NOT NULL," +
-                    "PRIMARY KEY (staffID)" +
-                    "CONSTRAINT FK_staff FOREIGN KEY (hotelID) REFERENCES hotel(hotelID) ON UPDATE CASCADE" +
+                    "CONSTRAINT staff_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID)" +
+                    "ON UPDATE CASCADE" +
                     ")");
-
             statement.executeUpdate("CREATE TABLE manager (" +
-                    "staffID INT NOT NULL," +
-                    "PRIMARY KEY (staffID)" +
-                    "CONSTRAINT FK_manager FOREIGN KEY (staffID) REFERENCES staff(staffID) ON UPDATE CASCADE" +
+                    "staffID INT PRIMARY KEY," +
+                    "CONSTRAINT manager_fk FOREIGN KEY(staffID) REFERENCES staff(staffID)" +
+                    "ON UPDATE CASCADE" +
                     ")");
-
             statement.executeUpdate("CREATE TABLE representative (" +
-                    "staffID INT NOT NULL," +
-                    "PRIMARY KEY (staffID)" +
-                    "CONSTRAINT FK_representativ FOREIGN KEY (staffID) REFERENCES staff(staffID) ON UPDATE CASCADE" +
+                    "staffID INT PRIMARY KEY," +
+                    "CONSTRAINT representative_fk FOREIGN KEY(staffID) REFERENCES staff(staffID)" +
+                    "ON UPDATE CASCADE" +
                     ")");
-
             statement.executeUpdate("CREATE TABLE customerInfo (" +
-                    "customerID INT NOT NULL," +
+                    "customerID INT PRIMARY KEY AUTO_INCREMENT," +
                     "customerName VARCHAR(128) NOT NULL," +
-                    "birthday VARCHAR(128) NOT NULL," +
-                    "phoneNumber VARCHAR(128) NOT NULL," +
-                    "emailAddress VARCHAR(128) NOT NULL," +
-                    "PRIMARY KEY (customerID)" +
+                    "birthday VARCHAR(128)," +
+                    "phoneNumber VARCHAR(128)," +
+                    "emailAddress VARCHAR(128) NOT NULL" +
                     ")");
-
-
             statement.executeUpdate("CREATE TABLE manage (" +
                     "managerID INT," +
                     "representativeID INT," +
@@ -84,9 +74,8 @@ public class HotelTables {
                     "CONSTRAINT manage_re_fk FOREIGN KEY(representativeID) REFERENCES representative(staffID)" +
                     "ON UPDATE CASCADE" +
                     ")");
-
             statement.executeUpdate("CREATE TABLE register (" +
-                    "	representativeID INT," +
+                    "representativeID INT," +
                     "customerID INT," +
                     "PRIMARY KEY(representativeID,customerID)," +
                     "CONSTRAINT register_re_fk FOREIGN KEY(representativeID) REFERENCES representative(staffID)" +
@@ -94,7 +83,6 @@ public class HotelTables {
                     "CONSTRAINT register_cus_fk FOREIGN KEY(customerID) REFERENCES customerInfo(customerID)" +
                     "ON UPDATE CASCADE" +
                     ")");
-
             statement.executeUpdate("CREATE TABLE manageHotel (" +
                     "managerID INT," +
                     "hotelID INT," +
@@ -104,7 +92,6 @@ public class HotelTables {
                     "CONSTRAINT manageHotel_hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) " +
                     "ON UPDATE CASCADE" +
                     ")");
-
             statement.executeUpdate("CREATE TABLE checkinInfo (" +
                     "checkinID INT PRIMARY KEY AUTO_INCREMENT," +
                     "hotelId INT NOT NULL," +
@@ -119,7 +106,6 @@ public class HotelTables {
                     "checkoutTime DATE NOT NULL, " +
                     "serviceOffered VARCHAR(128) " +
                     ")");
-
             statement.executeUpdate("CREATE TABLE assign (" +
                     "checkinID INT," +
                     "representativeID INT NOT NULL," +
@@ -135,7 +121,6 @@ public class HotelTables {
                     "CONSTRAINT assign_customer_fk FOREIGN KEY(customerID) REFERENCES customerInfo(customerID) " +
                     "ON UPDATE CASCADE" +
                     ")");
-
             statement.executeUpdate("CREATE TABLE serviceOffered (" +
                     "serviceOfferedID INT PRIMARY KEY AUTO_INCREMENT," +
                     "checkinID INT NOT NULL," +
@@ -146,8 +131,6 @@ public class HotelTables {
                     "CONSTRAINT serviceOffered_staff_fk FOREIGN KEY(staffID) REFERENCES staff(staffID) " +
                     "ON UPDATE CASCADE" +
                     ")");
-
-
             statement.executeUpdate("CREATE TABLE input (" +
                     "representativeID INT, " +
                     "checkinID INT, " +
@@ -157,8 +140,6 @@ public class HotelTables {
                     "CONSTRAINT input_checkinInfo_fk FOREIGN KEY(checkinID) REFERENCES checkinInfo(checkinID) " +
                     "ON UPDATE CASCADE" +
                     ")");
-
-
             statement.executeUpdate("CREATE TABLE customerHasCheckin (" +
                     "customerID INT," +
                     "checkinID INT," +
@@ -166,23 +147,17 @@ public class HotelTables {
                     "CONSTRAINT customerHasCheckin_customer_fk FOREIGN KEY(customerID) REFERENCES customerInfo(customerID) ON UPDATE CASCADE," +
                     "CONSTRAINT customerHasCheckin_checkin_fk FOREIGN KEY(checkinID) REFERENCES checkinInfo(checkinID) ON UPDATE CASCADE" +
                     ")");
-
-
             statement.executeUpdate("CREATE TABLE billingInfo (" +
                     "billingID INT PRIMARY KEY AUTO_INCREMENT," +
                     "billingAddress VARCHAR(512) NOT NULL," +
                     "paymentSSN VARCHAR(128) NOT NULL" +
                     ")");
-
-
             statement.executeUpdate("CREATE TABLE paymentInfo (" +
                     "paymentID INT PRIMARY KEY AUTO_INCREMENT," +
                     "paymentMethod VARCHAR(128) NOT NULL," +
                     "cardNumber VARCHAR(128) NOT NULL," +
                     "amount FLOAT NOT NULL" +
                     ")");
-
-
             statement.executeUpdate("CREATE TABLE billingHasPayment (" +
                     "billingID INT," +
                     "paymentID INT," +
@@ -190,8 +165,6 @@ public class HotelTables {
                     "CONSTRAINT billingHasPayment_billing_fk FOREIGN KEY(billingID) REFERENCES billingInfo(billingID) ON UPDATE CASCADE," +
                     "CONSTRAINT billingHasPayment_payment_fk FOREIGN KEY(paymentID) REFERENCES paymentInfo(paymentID) ON UPDATE CASCADE" +
                     ")");
-
-
             statement.executeUpdate("CREATE TABLE calculate (" +
                     "representativeID INT," +
                     "billingID INT," +
@@ -199,8 +172,6 @@ public class HotelTables {
                     "CONSTRAINT calculate_representative_fk FOREIGN KEY(representativeID) REFERENCES representative(staffID) ON UPDATE CASCADE," +
                     "CONSTRAINT calculate_billing_fk FOREIGN KEY(billingID) REFERENCES billingInfo(billingID) ON UPDATE CASCADE" +
                     ")");
-
-
             statement.executeUpdate("CREATE TABLE receive (" +
                     "customerID INT," +
                     "billingID INT," +
