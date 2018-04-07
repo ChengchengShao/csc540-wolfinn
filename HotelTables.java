@@ -11,15 +11,50 @@ public class HotelTables {
     private static ResultSet result = null;
 
     public static void main(String[] args) {
+        dropTables();
         createTables();
+        insertHotelTable();
         close();
     }
 
+    private static void dropTables(){
+      try{
+        connectToDatabase();
+
+        statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
+        statement.executeUpdate("DROP TABLE IF EXISTS hotel;");
+        statement.executeUpdate("DROP TABLE IF EXISTS room;");
+        statement.executeUpdate("DROP TABLE IF EXISTS staff;");
+        statement.executeUpdate("DROP TABLE IF EXISTS manager;");
+        statement.executeUpdate("DROP TABLE IF EXISTS representative;");
+        statement.executeUpdate("DROP TABLE IF EXISTS customerInfo;");
+        statement.executeUpdate("DROP TABLE IF EXISTS manage;");
+        statement.executeUpdate("DROP TABLE IF EXISTS register;");
+        statement.executeUpdate("DROP TABLE IF EXISTS manageHotel;");
+        statement.executeUpdate("DROP TABLE IF EXISTS checkinInfo;");
+        statement.executeUpdate("DROP TABLE IF EXISTS assign;");
+        statement.executeUpdate("DROP TABLE IF EXISTS serviceOffered;");
+        statement.executeUpdate("DROP TABLE IF EXISTS input;");
+        statement.executeUpdate("DROP TABLE IF EXISTS customerHasCheckin;");
+        statement.executeUpdate("DROP TABLE IF EXISTS billingInfo;");
+        statement.executeUpdate("DROP TABLE IF EXISTS paymentInfo;");
+        statement.executeUpdate("DROP TABLE IF EXISTS billingHasPayment;");
+        statement.executeUpdate("DROP TABLE IF EXISTS calculate;");
+        statement.executeUpdate("DROP TABLE IF EXISTS receive;");
+        statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 1;");
+
+
+        } catch (ClassNotFoundException e) {
+              e.printStackTrace();
+          } catch (SQLException e) {
+              e.printStackTrace();
+            }
+    }
 
     private static void createTables() {
         try {
             connectToDatabase();
-
+            dropTables();
 
             statement.executeUpdate("CREATE TABLE hotel (" +
                     "hotelID INT PRIMARY KEY AUTO_INCREMENT," +
@@ -188,6 +223,21 @@ public class HotelTables {
         }
     }
 
+    private static void insertHotelTable(){
+      try{
+        connectToDatabase();
+
+        statement.executeUpdate("INSERT INTO hotel VALUES (1, 'Hotel A','21 ABC St,Raleigh NC 27',919,100);");
+        statement.executeUpdate("INSERT INTO hotel VALUES (2, 'Hotel B','25 XYZ St,Rochester NY 54',718,101);");
+        statement.executeUpdate("INSERT INTO hotel VALUES (3, 'Hotel C','29 PQR St,Greensboro NC 27',984,102);");
+        statement.executeUpdate("INSERT INTO hotel VALUES (4, 'Hotel D','28 GHW St , Raleigh NC 32',920,105);");
+      }catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+    }
+
     private static void connectToDatabase() throws ClassNotFoundException, SQLException {
         Class.forName("org.mariadb.jdbc.Driver");
 
@@ -197,34 +247,7 @@ public class HotelTables {
         connection = DriverManager.getConnection(jdbcURL, user, password);
         statement = connection.createStatement();
 
-        try {
 
-
-            statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
-            statement.executeUpdate("DROP TABLE IF EXISTS hotel;");
-            statement.executeUpdate("DROP TABLE IF EXISTS room;");
-            statement.executeUpdate("DROP TABLE IF EXISTS staff;");
-            statement.executeUpdate("DROP TABLE IF EXISTS manager;");
-            statement.executeUpdate("DROP TABLE IF EXISTS representative;");
-            statement.executeUpdate("DROP TABLE IF EXISTS customerInfo;");
-            statement.executeUpdate("DROP TABLE IF EXISTS manage;");
-            statement.executeUpdate("DROP TABLE IF EXISTS register;");
-            statement.executeUpdate("DROP TABLE IF EXISTS manageHotel;");
-            statement.executeUpdate("DROP TABLE IF EXISTS checkinInfo;");
-            statement.executeUpdate("DROP TABLE IF EXISTS assign;");
-            statement.executeUpdate("DROP TABLE IF EXISTS serviceOffered;");
-            statement.executeUpdate("DROP TABLE IF EXISTS input;");
-            statement.executeUpdate("DROP TABLE IF EXISTS customerHasCheckin;");
-            statement.executeUpdate("DROP TABLE IF EXISTS billingInfo;");
-            statement.executeUpdate("DROP TABLE IF EXISTS paymentInfo;");
-            statement.executeUpdate("DROP TABLE IF EXISTS billingHasPayment;");
-            statement.executeUpdate("DROP TABLE IF EXISTS calculate;");
-            statement.executeUpdate("DROP TABLE IF EXISTS receive;");
-            statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 1;");
-
-
-            } catch (SQLException e) {
-              }
     }
 
 
