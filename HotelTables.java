@@ -22,7 +22,7 @@ public class HotelTables {
 
             statement.executeUpdate("CREATE TABLE hotel (" +
                     "hotelID INT NOT NULL," +
-                    "hotelName VARCHAR(128) NOT NULLL," +
+                    "hotelName VARCHAR(128) NOT NULL," +
                     "hotelAddress VARCHAR(128) NOT NULL," +
                     "hotelPhoneNumber VARCHAR(128) NOT NULL," +
                     "hotelManagerID VARCHAR(128) NOT NULL," +
@@ -31,7 +31,7 @@ public class HotelTables {
 
             statement.executeUpdate("CREATE TABLE room (" +
                     "roomID INT NOT NULL," +
-                    "availability VARCHAR(128) NOT NULLL," +
+                    "availability VARCHAR(128) NOT NULL," +
                     "roomCategory VARCHAR(128) NOT NULL," +
                     "nightlyRate FLOAT(5,2) NOT NULL," +
                     "maxAllowedOccupancy INT NOT NULL," +
@@ -44,7 +44,7 @@ public class HotelTables {
             statement.executeUpdate("CREATE TABLE staff (" +
                     "staffID INT NOT NULL," +
                     "age INT NOT NULL," +
-                    "name VARCHAR(128) NOT NULLL," +
+                    "name VARCHAR(128) NOT NULL," +
                     "department VARCHAR(128) NOT NULL," +
                     "contactInformation INT NOT NULL," +
                     "hotelID INT NOT NULL," +
@@ -67,7 +67,7 @@ public class HotelTables {
 
             statement.executeUpdate("CREATE TABLE customerInfo (" +
                     "customerID INT NOT NULL," +
-                    "customerName VARCHAR(128) NOT NULLL," +
+                    "customerName VARCHAR(128) NOT NULL," +
                     "birthday VARCHAR(128) NOT NULL," +
                     "phoneNumber VARCHAR(128) NOT NULL," +
                     "emailAddress VARCHAR(128) NOT NULL," +
