@@ -84,6 +84,20 @@ public class HotelTables {
                     "phonenumber VARCHAR(128)," +
                     "email VARCHAR(128) NOT NULL" +
                     ")");
+            statement.executeUpdate("CREATE TABLE billingInfo (" +
+                    "customerID INT NOT NULL," +
+                    "payerSSN VARCHAR(128) NOT NULL," + 
+                    "billingaddress VARCHAR(512) NOT NULL," +
+                    "paymentmethod VARCHAR(128) NOT NULL," +
+                    "cardnumber VARCHAR(128)," +
+                    "CONSTRAINT customer_fk FOREIGN KEY(customerID) REFERENCES customer(customerID)" +
+                    "ON UPDATE CASCADE" +
+                    ")");
+            statement.executeUpdate("CREATE TABLE services(" +
+                    "servicename VARCHAR(128) PRIMARY KEY NOT NULL," +
+                    "fees FLOAT(8,2) NOT NULL" +
+                    ")");
+                    
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -143,7 +157,40 @@ public class HotelTables {
     }
 
 
+    private static void insertbillingInfo(){
+      try{
+        connectToDatabase();
 
+        statement.executeUpdate("INSERT INTO billingInfo VALUES(1001,'593-9846,'980 TRT St , Raleigh NC','credit','1052')");
+        statement.executeUpdate("INSERT INTO billingInfo VALUES(1002,'777-8352','7720 MHT St , Greensboro NC','hotel credit','3020')");
+        statement.executeUpdate("INSERT INTO billingInfo VALUES(1003,'858-9430','231 DRY St , Rochester NY 78','credit','2497')");
+        statement.executeUpdate("INSERT INTO billingInfo VALUES(1004,'440-9328','24 BST Dr , Dallas TX 14','cash',)");
+      }
+      catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+
+    }
+
+    private static void insertServices(){
+      try{
+        connectToDatabase();
+
+        statement.executeUpdate("IINSERT INTO services VALUES('phone bills',5)");
+        statement.executeUpdate("INSERT INTO services VALUES('dry cleaning',16)");
+        statement.executeUpdate("IINSERT INTO services VALUES('gyms',15)");
+        statement.executeUpdate("INSERT INTO services VALUES('room service',10)");
+        statement.executeUpdate("INSERT INTO services VALUES('special requests',20)");
+      }
+      catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+
+    }
     private static void connectToDatabase() throws ClassNotFoundException, SQLException {
         Class.forName("org.mariadb.jdbc.Driver");
 
