@@ -15,7 +15,7 @@ public class HotelTables {
         createTables();
         insertHotelTable();
         insertRoomTable();
-        insertCustomerTable()
+        insertCustomerTable();
 
         close();
     }
@@ -230,10 +230,10 @@ public class HotelTables {
       try{
         connectToDatabase();
 
-        statement.executeUpdate("INSERT INTO hotel VALUES (1, 'Hotel A','21 ABC St,Raleigh NC 27',919,100);");
-        statement.executeUpdate("INSERT INTO hotel VALUES (2, 'Hotel B','25 XYZ St,Rochester NY 54',718,101);");
-        statement.executeUpdate("INSERT INTO hotel VALUES (3, 'Hotel C','29 PQR St,Greensboro NC 27',984,102);");
-        statement.executeUpdate("INSERT INTO hotel VALUES (4, 'Hotel D','28 GHW St , Raleigh NC 32',920,105);");
+        statement.executeUpdate("INSERT INTO hotel VALUES (1, 'Hotel A','21 ABC St,Raleigh NC 27',919,100)");
+        statement.executeUpdate("INSERT INTO hotel VALUES (2, 'Hotel B','25 XYZ St,Rochester NY 54',718,101)");
+        statement.executeUpdate("INSERT INTO hotel VALUES (3, 'Hotel C','29 PQR St,Greensboro NC 27',984,102)");
+        statement.executeUpdate("INSERT INTO hotel VALUES (4, 'Hotel D','28 GHW St , Raleigh NC 32',920,105)");
       }catch (ClassNotFoundException e) {
           e.printStackTrace();
       } catch (SQLException e) {
@@ -245,12 +245,12 @@ public class HotelTables {
       try{
         connectToDatabase();
 
-        statement.executeUpdate("INSERT INTO room VALUES (1,'Economy',1,100,1,'YES');");
-        statement.executeUpdate("INSERT INTO room VALUES (2,'Deluxe',1,200,2,'YES');");
-        statement.executeUpdate("INSERT INTO room VALUES (3,'Economy',2,100,1,'YES');");
-        statement.executeUpdate("INSERT INTO room VALUES (4,'Executive',3,1000,3,'No');");
-        statement.executeUpdate("INSERT INTO room VALUES (5,'Presidential',4,5000,4,'YES');");
-        statement.executeUpdate("INSERT INTO room VALUES (6,'Deluxe',1,200,2,'YES');");
+        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (1,'Economy',1,100,1,'YES')");
+        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (2,'Deluxe',1,200,2,'YES')");
+        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (3,'Economy',2,100,1,'YES')");
+        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (4,'Executive',3,100,3,'No')");
+        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (5,'Presidential',4,500,4,'YES')");
+        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (6,'Deluxe',1,200,2,'YES')");
       }
       catch (ClassNotFoundException e) {
           e.printStackTrace();
@@ -264,10 +264,10 @@ public class HotelTables {
       try{
         connectToDatabase();
 
-        statement.executeUpdate("INSERT INTO room VALUES (1,'David','19800130',123,'david@gmail.com');");
-        statement.executeUpdate("INSERT INTO room VALUES (2,'Sarah','19710130',456,'sarah@gmail.com');");
-        statement.executeUpdate("INSERT INTO room VALUES (3,'Joseph','19870130',789,'joseph@gmail.com');");
-        statement.executeUpdate("INSERT INTO room VALUES (4,'Lucy','19850130',213,'lucy@gmail.com');");
+        statement.executeUpdate("INSERT INTO customerInfo VALUES (1,'David','19800130','123','david@gmail.com')");
+        statement.executeUpdate("INSERT INTO customerInfo VALUES (2,'Sarah','19710130','456','sarah@gmail.com')");
+        statement.executeUpdate("INSERT INTO customerInfo VALUES (3,'Joseph','19870130','789','joseph@gmail.com')");
+        statement.executeUpdate("INSERT INTO customerInfo VALUES (4,'Lucy','19850130','213','lucy@gmail.com')");
       }
       catch (ClassNotFoundException e) {
           e.printStackTrace();
