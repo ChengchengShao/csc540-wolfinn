@@ -13,9 +13,8 @@ public class HotelTables {
     public static void main(String[] args) {
         dropTables();
         createTables();
-        insertHotelTable();
-        insertRoomTable();
-        insertCustomerTable();
+        insertstaff();
+        insertcheckin();
 
         close();
     }
@@ -26,8 +25,8 @@ public class HotelTables {
 
         statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
         statement.executeUpdate("DROP TABLE IF EXISTS hotel;");
-        statement.executeUpdate("DROP TABLE IF EXISTS room;");
         statement.executeUpdate("DROP TABLE IF EXISTS staff;");
+        statement.executeUpdate("DROP TABLE IF EXISTS checkin;");
         statement.executeUpdate("DROP TABLE IF EXISTS manager;");
         statement.executeUpdate("DROP TABLE IF EXISTS representative;");
         statement.executeUpdate("DROP TABLE IF EXISTS customerInfo;");
@@ -59,164 +58,35 @@ public class HotelTables {
             connectToDatabase();
             dropTables();
 
-            statement.executeUpdate("CREATE TABLE hotel (" +
-                    "hotelID INT PRIMARY KEY AUTO_INCREMENT," +
-                    "hotelName VARCHAR(128) NOT NULL," +
-                    "hotelAddress VARCHAR(128) NOT NULL," +
-                    "hotelPhoneNumber VARCHAR(128) NOT NULL," +
-                    "hotelManagerID VARCHAR(128) NOT NULL" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE room (" +
-                    "roomId INT PRIMARY KEY AUTO_INCREMENT," +
-                    "availability VARCHAR(128) NOT NULL," +
-                    "roomCategory VARCHAR(128) NOT NULL," +
-                    "nightlyRate FLOAT(7,2) NOT NULL," +
-                    "maxAllowedOccupancy INT NOT NULL," +
-                    "hotelID INT NOT NULL," +
-                    "CONSTRAINT hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID)" +
-                    "ON UPDATE CASCADE" +
-                    ")");
             statement.executeUpdate("CREATE TABLE staff (" +
-                    "staffID INT PRIMARY KEY AUTO_INCREMENT," +
-                    "age INT not NULL," +
+                    "staffID INT PRIMARY KEY," +
                     "name VARCHAR(128) NOT NULL," +
-                    "department VARCHAR(128) NOT NULL," +
-                    "contactInformation INT NOT NULL," +
-                    "hotelID INT NOT NULL," +
+                    "age INT not NULL," +
                     "jobtitle VARCHAR(128) NOT NULL," +
-                    "CONSTRAINT staff_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID)" +
-                    "ON UPDATE CASCADE" +
+                    "hotelID VARCHAR(128) NOT NULL," +
+                    "department VARCHAR(128) NOT NULL," +
+                    "phonenumber INT NOT NULL," +
+                    "address VARCHAR(128) NOT NULL" +
+                   /* "CONSTRAINT staff_hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) " +
+                    "ON UPDATE CASCADE, " +                */
                     ")");
-            statement.executeUpdate("CREATE TABLE manager (" +
-                    "staffID INT PRIMARY KEY," +
-                    "CONSTRAINT manager_fk FOREIGN KEY(staffID) REFERENCES staff(staffID)" +
-                    "ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE representative (" +
-                    "staffID INT PRIMARY KEY," +
-                    "CONSTRAINT representative_fk FOREIGN KEY(staffID) REFERENCES staff(staffID)" +
-                    "ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE customerInfo (" +
-                    "customerID INT PRIMARY KEY AUTO_INCREMENT," +
-                    "customerName VARCHAR(128) NOT NULL," +
-                    "birthday VARCHAR(128)," +
-                    "phoneNumber VARCHAR(128)," +
-                    "emailAddress VARCHAR(128) NOT NULL" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE manage (" +
-                    "managerID INT," +
-                    "representativeID INT," +
-                    "PRIMARY KEY(managerID,representativeID)," +
-                    "CONSTRAINT manage_ma_fk FOREIGN KEY(managerID) REFERENCES manager(staffID)" +
-                    "ON UPDATE CASCADE," +
-                    "CONSTRAINT manage_re_fk FOREIGN KEY(representativeID) REFERENCES representative(staffID)" +
-                    "ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE register (" +
-                    "representativeID INT," +
-                    "customerID INT," +
-                    "PRIMARY KEY(representativeID,customerID)," +
-                    "CONSTRAINT register_re_fk FOREIGN KEY(representativeID) REFERENCES representative(staffID)" +
-                    "ON UPDATE CASCADE," +
-                    "CONSTRAINT register_cus_fk FOREIGN KEY(customerID) REFERENCES customerInfo(customerID)" +
-                    "ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE manageHotel (" +
-                    "managerID INT," +
-                    "hotelID INT," +
-                    "PRIMARY KEY(managerID, hotelID)," +
-                    "CONSTRAINT manageHotel_manager_fk FOREIGN KEY(managerID) REFERENCES manager(staffID)" +
-                    "ON UPDATE CASCADE," +
-                    "CONSTRAINT manageHotel_hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) " +
-                    "ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE checkinInfo (" +
-                    "checkinID INT PRIMARY KEY AUTO_INCREMENT," +
-                    "hotelId INT NOT NULL," +
-                    "CONSTRAINT checkinInfo_hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) " +
-                    "ON UPDATE CASCADE," +
-                    "customerName VARCHAR(128) NOT NULL, " +
-                    "roomID INT NOT NULL, " +
-                    "guestsNumber VARCHAR(128) NOT NULL, customerBirthday DATE, " +
-                    "startDate DATE NOT NULL, " +
-                    "endDate DATE NOT NULL, " +
-                    "checkinTime DATE NOT NULL, " +
-                    "checkoutTime DATE NOT NULL, " +
-                    "serviceOffered VARCHAR(128) " +
-                    ")");
-            statement.executeUpdate("CREATE TABLE assign (" +
-                    "checkinID INT," +
-                    "representativeID INT NOT NULL," +
-                    "roomID INT NOT NULL," +
+
+            statement.executeUpdate("CREATE TABLE checkin (" +
                     "customerID INT NOT NULL," +
-                    "PRIMARY KEY(checkinID)," +
-                    "CONSTRAINT assign_checkin_fk FOREIGN KEY(checkinID) REFERENCES checkinInfo(checkinID) " +
-                    "ON UPDATE CASCADE," +
-                    "CONSTRAINT assign_representative_fk FOREIGN KEY(representativeID) REFERENCES representative(staffID) " +
-                    "ON UPDATE CASCADE," +
-                    "CONSTRAINT assign_room_fk FOREIGN KEY(roomID) REFERENCES room(roomID) " +
-                    "ON UPDATE CASCADE," +
-                    "CONSTRAINT assign_customer_fk FOREIGN KEY(customerID) REFERENCES customerInfo(customerID) " +
-                    "ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE serviceOffered (" +
-                    "serviceOfferedID INT PRIMARY KEY AUTO_INCREMENT," +
-                    "checkinID INT NOT NULL," +
-                    "staffID INT NOT NULL," +
-                    "price FLOAT NOT NULL," +
-                    "CONSTRAINT serviceOffered_checkin_fk FOREIGN KEY(checkinID) REFERENCES checkinInfo(checkinID) " +
-                    "ON UPDATE CASCADE," +
-                    "CONSTRAINT serviceOffered_staff_fk FOREIGN KEY(staffID) REFERENCES staff(staffID) " +
-                    "ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE input (" +
-                    "representativeID INT, " +
-                    "checkinID INT, " +
-                    "PRIMARY KEY(representativeID, checkinID)," +
-                    "CONSTRAINT input_representative_fk FOREIGN KEY(representativeID) REFERENCES representative(staffID) " +
-                    "ON UPDATE CASCADE," +
-                    "CONSTRAINT input_checkinInfo_fk FOREIGN KEY(checkinID) REFERENCES checkinInfo(checkinID) " +
-                    "ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE customerHasCheckin (" +
-                    "customerID INT," +
-                    "checkinID INT," +
-                    "CONSTRAINT customerHasCheckin_pk PRIMARY KEY(customerID, checkinID)," +
-                    "CONSTRAINT customerHasCheckin_customer_fk FOREIGN KEY(customerID) REFERENCES customerInfo(customerID) ON UPDATE CASCADE," +
-                    "CONSTRAINT customerHasCheckin_checkin_fk FOREIGN KEY(checkinID) REFERENCES checkinInfo(checkinID) ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE billingInfo (" +
-                    "billingID INT PRIMARY KEY AUTO_INCREMENT," +
-                    "billingAddress VARCHAR(512) NOT NULL," +
-                    "paymentSSN VARCHAR(128) NOT NULL" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE paymentInfo (" +
-                    "paymentID INT PRIMARY KEY AUTO_INCREMENT," +
-                    "paymentMethod VARCHAR(128) NOT NULL," +
-                    "cardNumber VARCHAR(128) NOT NULL," +
-                    "amount FLOAT NOT NULL" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE billingHasPayment (" +
-                    "billingID INT," +
-                    "paymentID INT," +
-                    "CONSTRAINT billingHasPayment_pk PRIMARY KEY(billingID, paymentID)," +
-                    "CONSTRAINT billingHasPayment_billing_fk FOREIGN KEY(billingID) REFERENCES billingInfo(billingID) ON UPDATE CASCADE," +
-                    "CONSTRAINT billingHasPayment_payment_fk FOREIGN KEY(paymentID) REFERENCES paymentInfo(paymentID) ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE calculate (" +
-                    "representativeID INT," +
-                    "billingID INT," +
-                    "CONSTRAINT calculate_pk PRIMARY KEY(representativeID, billingID)," +
-                    "CONSTRAINT calculate_representative_fk FOREIGN KEY(representativeID) REFERENCES representative(staffID) ON UPDATE CASCADE," +
-                    "CONSTRAINT calculate_billing_fk FOREIGN KEY(billingID) REFERENCES billingInfo(billingID) ON UPDATE CASCADE" +
-                    ")");
-            statement.executeUpdate("CREATE TABLE receive (" +
-                    "customerID INT," +
-                    "billingID INT," +
-                    "CONSTRAINT receive_pk PRIMARY KEY(customerID, billingID)," +
-                    "CONSTRAINT receive_customer_fk FOREIGN KEY(customerID) REFERENCES customerInfo(customerID) ON UPDATE CASCADE," +
-                    "CONSTRAINT receive_billing_fk FOREIGN KEY(billingID) REFERENCES billingInfo(billingID) ON UPDATE CASCADE" +
+                    "hotelID INT NOT NULL," +
+                    "roomnumber INT NOT NULL," +
+                    "numberofguests INT not NULL," +
+                    "startdate DATE NOT NULL, " +
+                    "enddate DATE NOT NULL, " +
+                    "checkintime DATETIME NOT NULL, " +
+                    "checkouttime DATETIME NOT NULL, " +
+                    "servicesoffered VARCHAR(128) NOT NULL" +
+                    /*"CONSTRAINT checkin_customer_fk FOREIGN KEY(customerID) REFERENCES customer(customerID) " +
+                    "ON UPDATE CASCADE, " +
+                    "CONSTRAINT checkin_hotel1_fk FOREIGN KEY(hotelID) REFERENCES hotel(chotelID) " +
+                    "ON UPDATE CASCADE, " +
+                    "CONSTRAINT checkin_hotel2_fk FOREIGN KEY(roomnumber) REFERENCES hotel(roomnumber) " +
+                    "ON UPDATE CASCADE" + */
                     ")");
 
         } catch (ClassNotFoundException e) {
@@ -226,31 +96,17 @@ public class HotelTables {
         }
     }
 
-    private static void insertHotelTable(){
+    private static void insertstaff(){
       try{
         connectToDatabase();
 
-        statement.executeUpdate("INSERT INTO hotel VALUES (1, 'Hotel A','21 ABC St,Raleigh NC 27',919,100)");
-        statement.executeUpdate("INSERT INTO hotel VALUES (2, 'Hotel B','25 XYZ St,Rochester NY 54',718,101)");
-        statement.executeUpdate("INSERT INTO hotel VALUES (3, 'Hotel C','29 PQR St,Greensboro NC 27',984,102)");
-        statement.executeUpdate("INSERT INTO hotel VALUES (4, 'Hotel D','28 GHW St , Raleigh NC 32',920,105)");
-      }catch (ClassNotFoundException e) {
-          e.printStackTrace();
-      } catch (SQLException e) {
-          e.printStackTrace();
-      }
-    }
-
-    private static void insertRoomTable(){
-      try{
-        connectToDatabase();
-
-        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (1,'Economy',1,100,1,'YES')");
-        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (2,'Deluxe',1,200,2,'YES')");
-        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (3,'Economy',2,100,1,'YES')");
-        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (4,'Executive',3,1000,3,'No')");
-        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (5,'Presidential',4,5000,4,'YES')");
-        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (6,'Deluxe',1,200,2,'YES')");
+        statement.executeUpdate("INSERT INTO staff  VALUES (100,'Mary',40,'Manager',1, 'Management', 654, '90 ABC St , Raleigh NC 27')");
+        statement.executeUpdate("INSERT INTO staff  VALUES (101,'Carol',55, 'Manager', 3, 'Management', 546, '351 MH St , Greensboro NC 27')");
+        statement.executeUpdate("INSERT INTO staff  VALUES (102,'John',45, 'Manager', 2, 'Management', 564, '798 XYZ St , Rochester NY 54')");
+        statement.executeUpdate("INSERT INTO staff  VALUES (103,'Emma', 55,'Front Desk Staff', 1, 'Management', 546, '49 ABC St , Raleigh NC 27')");
+        statement.executeUpdate("INSERT INTO staff  VALUES (104,'Ava', 55, 'Catering Staff', 1, 'Catering', 777, '425 RG St , Raleigh NC 27')");
+        statement.executeUpdate("INSERT INTO staff  VALUES (105,'Peter', 52, 'Manager', 4, 'Manager', 724, '475 RG St , Raleigh NC 27')");
+        statement.executeUpdate("INSERT INTO staff  VALUES (106,'Olivia', 27,'Front Desk Staff', 4, 'Management', 799, '325 PD St , Raleigh NC 27')");
       }
       catch (ClassNotFoundException e) {
           e.printStackTrace();
@@ -260,14 +116,14 @@ public class HotelTables {
 
     }
 
-    private static void insertCustomerTable(){
+    private static void insertcheckin(){
       try{
         connectToDatabase();
 
-        statement.executeUpdate("INSERT INTO customerInfo VALUES (1001,'David','19800130','123','david@gmail.com')");
-        statement.executeUpdate("INSERT INTO customerInfo VALUES (1002,'Sarah','19710130','456','sarah@gmail.com')");
-        statement.executeUpdate("INSERT INTO customerInfo VALUES (1003,'Joseph','19870130','789','joseph@gmail.com')");
-        statement.executeUpdate("INSERT INTO customerInfo VALUES (1004,'Lucy','19850130','213','lucy@gmail.com')");
+        statement.executeUpdate("INSERT INTO checkin VALUES (1001, 1, 1, 1, '2017-5-10', '2017-5-13', '2017-5-10 15:17:00', '2017-5-13 10:22:00', 'dry cleaning, gyms')");
+        statement.executeUpdate("INSERT INTO checkin VALUES (1002, 1, 2, 2, '2017-5-10', '2017-5-13', '2017-5-10 16:11:00', '2017-5-13 9:27:00', 'gyms')");
+        statement.executeUpdate("INSERT INTO checkin VALUES (1003, 2, 3, 1, '2016-5-10', '2016-5-14', '2016-5-10 15:45:00', '2016-5-14 11:10:00', 'room service')");
+        statement.executeUpdate("INSERT INTO checkin VALUES (1004, 3, 2, 2, '2018-5-10', '2018-5-12', '2018-5-10 14:30:00', '2018-5-12 10:00:00', 'phone bills')");
       }
       catch (ClassNotFoundException e) {
           e.printStackTrace();
@@ -276,7 +132,6 @@ public class HotelTables {
       }
 
     }
-
 
 
     private static void connectToDatabase() throws ClassNotFoundException, SQLException {
