@@ -161,10 +161,10 @@ public class HotelTables {
       try{
         connectToDatabase();
 
-        statement.executeUpdate("INSERT INTO billingInfo VALUES(1001,'593-9846,'980 TRT St , Raleigh NC','credit','1052')");
+        statement.executeUpdate("INSERT INTO billingInfo VALUES(1001,'593-9846','980 TRT St , Raleigh NC','credit','1052')");
         statement.executeUpdate("INSERT INTO billingInfo VALUES(1002,'777-8352','7720 MHT St , Greensboro NC','hotel credit','3020')");
         statement.executeUpdate("INSERT INTO billingInfo VALUES(1003,'858-9430','231 DRY St , Rochester NY 78','credit','2497')");
-        statement.executeUpdate("INSERT INTO billingInfo VALUES(1004,'440-9328','24 BST Dr , Dallas TX 14','cash',)");
+        statement.executeUpdate("INSERT INTO billingInfo VALUES(1004,'440-9328','24 BST Dr , Dallas TX 14','cash','')");
       }
       catch (ClassNotFoundException e) {
           e.printStackTrace();
@@ -178,9 +178,9 @@ public class HotelTables {
       try{
         connectToDatabase();
 
-        statement.executeUpdate("IINSERT INTO services VALUES('phone bills',5)");
+        statement.executeUpdate("INSERT INTO services VALUES('phone bills',5)");
         statement.executeUpdate("INSERT INTO services VALUES('dry cleaning',16)");
-        statement.executeUpdate("IINSERT INTO services VALUES('gyms',15)");
+        statement.executeUpdate("INSERT INTO services VALUES('gyms',15)");
         statement.executeUpdate("INSERT INTO services VALUES('room service',10)");
         statement.executeUpdate("INSERT INTO services VALUES('special requests',20)");
       }
