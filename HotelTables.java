@@ -248,8 +248,8 @@ public class HotelTables {
         statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (1,'Economy',1,100,1,'YES')");
         statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (2,'Deluxe',1,200,2,'YES')");
         statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (3,'Economy',2,100,1,'YES')");
-        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (4,'Executive',3,100,3,'No')");
-        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (5,'Presidential',4,500,4,'YES')");
+        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (4,'Executive',3,1000,3,'No')");
+        statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (5,'Presidential',4,5000,4,'YES')");
         statement.executeUpdate("INSERT INTO room (roomID,roomCategory,hotelID,nightlyRate,maxAllowedOccupancy,availability) VALUES (6,'Deluxe',1,200,2,'YES')");
       }
       catch (ClassNotFoundException e) {
