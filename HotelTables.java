@@ -16,6 +16,8 @@ public class HotelTables {
         insertHotelTable();
         insertRoomTable();
         insertCustomerTable();
+        insertBillingInfo();
+        insertServices();
 
         close();
     }
@@ -157,7 +159,7 @@ public class HotelTables {
     }
 
 
-    private static void insertbillingInfo(){
+    private static void insertBillingInfo(){
       try{
         connectToDatabase();
 
