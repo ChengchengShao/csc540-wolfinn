@@ -70,7 +70,7 @@ public class HotelTables {
                     "roomId INT PRIMARY KEY AUTO_INCREMENT," +
                     "availability VARCHAR(128) NOT NULL," +
                     "roomCategory VARCHAR(128) NOT NULL," +
-                    "nightlyRate FLOAT(5,2) NOT NULL," +
+                    "nightlyRate FLOAT(7,2) NOT NULL," +
                     "maxAllowedOccupancy INT NOT NULL," +
                     "hotelID INT NOT NULL," +
                     "CONSTRAINT hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID)" +
