@@ -14,6 +14,9 @@ public class HotelTables {
         dropTables();
         createTables();
         insertHotelTable();
+        insertRoomTable();
+        insertCustomerTable()
+
         close();
     }
 
@@ -237,6 +240,44 @@ public class HotelTables {
           e.printStackTrace();
       }
     }
+
+    private static void insertRoomTable(){
+      try{
+        connectToDatabase();
+
+        statement.executeUpdate("INSERT INTO room VALUES (1,'Economy',1,100,1,'YES');");
+        statement.executeUpdate("INSERT INTO room VALUES (2,'Deluxe',1,200,2,'YES');");
+        statement.executeUpdate("INSERT INTO room VALUES (3,'Economy',2,100,1,'YES');");
+        statement.executeUpdate("INSERT INTO room VALUES (4,'Executive',3,1000,3,'No');");
+        statement.executeUpdate("INSERT INTO room VALUES (5,'Presidential',4,5000,4,'YES');");
+        statement.executeUpdate("INSERT INTO room VALUES (6,'Deluxe',1,200,2,'YES');");
+      }
+      catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+
+    }
+
+    private static void insertCustomerTable(){
+      try{
+        connectToDatabase();
+
+        statement.executeUpdate("INSERT INTO room VALUES (1,'David','19800130',123,'david@gmail.com');");
+        statement.executeUpdate("INSERT INTO room VALUES (2,'Sarah','19710130',456,'sarah@gmail.com');");
+        statement.executeUpdate("INSERT INTO room VALUES (3,'Joseph','19870130',789,'joseph@gmail.com');");
+        statement.executeUpdate("INSERT INTO room VALUES (4,'Lucy','19850130',213,'lucy@gmail.com');");
+      }
+      catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+
+    }
+
+
 
     private static void connectToDatabase() throws ClassNotFoundException, SQLException {
         Class.forName("org.mariadb.jdbc.Driver");
