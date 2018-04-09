@@ -264,10 +264,10 @@ public class HotelTables {
       try{
         connectToDatabase();
 
-        statement.executeUpdate("INSERT INTO customerInfo VALUES (1,'David','19800130','123','david@gmail.com')");
-        statement.executeUpdate("INSERT INTO customerInfo VALUES (2,'Sarah','19710130','456','sarah@gmail.com')");
-        statement.executeUpdate("INSERT INTO customerInfo VALUES (3,'Joseph','19870130','789','joseph@gmail.com')");
-        statement.executeUpdate("INSERT INTO customerInfo VALUES (4,'Lucy','19850130','213','lucy@gmail.com')");
+        statement.executeUpdate("INSERT INTO customerInfo VALUES (1001,'David','19800130','123','david@gmail.com')");
+        statement.executeUpdate("INSERT INTO customerInfo VALUES (1002,'Sarah','19710130','456','sarah@gmail.com')");
+        statement.executeUpdate("INSERT INTO customerInfo VALUES (1003,'Joseph','19870130','789','joseph@gmail.com')");
+        statement.executeUpdate("INSERT INTO customerInfo VALUES (1004,'Lucy','19850130','213','lucy@gmail.com')");
       }
       catch (ClassNotFoundException e) {
           e.printStackTrace();
