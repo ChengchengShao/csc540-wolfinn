@@ -11,23 +11,28 @@ public class HotelTables {
     private static ResultSet result = null;
 
     public static void main(String[] args) {
-        dropTables();
-        createTables();
-        insertHotelTable();
-        insertRoomTable();
-        insertCustomerTable();
-        insertBillingInfo();
-        insertServices();     
-        insertstaff();
-        insertcheckin();
 
+        initialize();
         close();
     }
 
+
+    private static void initialize(){
+
+      dropTables();
+      createTables();
+      insertHotelTable();
+      insertRoomTable();
+      insertCustomerTable();
+      insertBillingInfo();
+      insertServices();
+      insertstaff();
+      insertcheckin();
+
+    }
     private static void dropTables(){
       try{
         connectToDatabase();
-
         statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
         statement.executeUpdate("DROP TABLE IF EXISTS hotel;");
         statement.executeUpdate("DROP TABLE IF EXISTS room;");
@@ -99,7 +104,7 @@ public class HotelTables {
                     "phonenumber INT NOT NULL," +
                     "address VARCHAR(128) NOT NULL, " +
                     "CONSTRAINT staff_hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) " +
-                    "ON UPDATE CASCADE " +                
+                    "ON UPDATE CASCADE " +
                     ")");
 
             statement.executeUpdate("CREATE TABLE checkin (" +
@@ -117,12 +122,12 @@ public class HotelTables {
                     "CONSTRAINT checkin_hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) " +
                     "ON UPDATE CASCADE, " +
                     "CONSTRAINT checkin_room_fk FOREIGN KEY(roomnumber) REFERENCES room(roomnumber) " +
-                    "ON UPDATE CASCADE" + 
+                    "ON UPDATE CASCADE" +
                     ")");
 
             statement.executeUpdate("CREATE TABLE billingInfo (" +
                     "customerID INT NOT NULL," +
-                    "payerSSN VARCHAR(128) NOT NULL," + 
+                    "payerSSN VARCHAR(128) NOT NULL," +
                     "billingaddress VARCHAR(512) NOT NULL," +
                     "paymentmethod VARCHAR(128) NOT NULL," +
                     "cardnumber VARCHAR(128)," +
@@ -133,7 +138,7 @@ public class HotelTables {
                     "servicename VARCHAR(128) PRIMARY KEY NOT NULL," +
                     "fees FLOAT(8,2) NOT NULL" +
                     ")");
-                    
+
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
