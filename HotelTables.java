@@ -3,6 +3,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.scanner;
 
 public class HotelTables {
     static final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/zsun12";
@@ -11,11 +12,29 @@ public class HotelTables {
     private static ResultSet result = null;
 
     public static void main(String[] args) {
-
+        int choiceA;
+        Scanner mainMenuChoice =new SCanner (System.in);
         initialize();
+        mainmenu();
+        System.out.println("My choice:");
+        choiceA = mainMenuChoice.nextInt();
+        If choiceA=1{
+          informationProcessing();
+        }
+
         close();
+
     }
 
+
+    private static void mainmenu(){
+      System.out.printf("Welcome to Team F Wolf Inn! Please choose what you  want to do:");
+      System.out.printf("1.Information Processing");
+      System.out.printf("2.Maintaining Service Records");
+      System.out.printf("3.Reports");
+      System.out.printf("4.Exit")
+
+    }
 
     private static void initialize(){
 
@@ -268,6 +287,12 @@ public class HotelTables {
       }
 
     }
+
+    private  static void informationProcessing(){
+      System.out.printf("Choose what you want to do with informationProcessing:")
+    }
+
+
     private static void connectToDatabase() throws ClassNotFoundException, SQLException {
         Class.forName("org.mariadb.jdbc.Driver");
 
