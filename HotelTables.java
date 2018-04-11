@@ -195,7 +195,7 @@ public class HotelTables {
 
         statement.executeUpdate("INSERT INTO room VALUES (1,1,'Economy',1,100,'Yes')");
         statement.executeUpdate("INSERT INTO room VALUES (2,1,'Deluxe',2,200,'Yes')");
-        statement.executeUpdate("INSERT INTO room connectToDatabase();VALUES (3,2,'Economy',1,100,'YES')");
+        statement.executeUpdate("INSERT INTO room VALUES (3,2,'Economy',1,100,'YES')");
         statement.executeUpdate("INSERT INTO room VALUES (2,3,'Executive',3,1000,'No')");
         statement.executeUpdate("INSERT INTO room VALUES (1,4,'Presidential',4,5000,'YES')");
         statement.executeUpdate("INSERT INTO room VALUES (5,1,'Deluxe',2,200,'YES')");
