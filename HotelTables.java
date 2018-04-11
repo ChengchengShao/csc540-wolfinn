@@ -370,6 +370,10 @@ public class HotelTables {
             e.printStackTrace();
         }
       }
+
+      else if (choiceC==2) {
+        Scanner thirdMenuChoice =new Scanner (System.in);
+      }
       else{
         mainmenu();
       }
