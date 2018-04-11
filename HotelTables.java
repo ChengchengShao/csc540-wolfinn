@@ -46,7 +46,8 @@ public class HotelTables {
     }
 
     private static void initialize(){
-
+    	
+    	System.out.printf("Initializing...\n");
       dropTables();
       createTables();
       insertHotelTable();
@@ -56,8 +57,25 @@ public class HotelTables {
       insertServices();
       insertstaff();
       insertcheckin();
-
+      
+      //check whether all data have been loaded successfully
+      try{
+      	statement.executeUpdate("use information_schema;");
+      	ResultSet rs=statement.executeQuery("select sum(table_rows) from tables where TABLE_SCHEMA = 'zsun12';");
+      	statement.executeUpdate("use zsun12;");
+      	rs.next();
+      	if(rs.getInt(1)==34) {
+      		System.out.printf("All data have been loaded successfully!\n");
+      	}
+      	else {
+      		System.out.printf("Failed to load data, please check!\n");
+      		System.exit(0);
+      	}
+      	} catch (SQLException e) {
+      			e.printStackTrace();
+          }
     }
+    
     private static void dropTables(){
       try{
         connectToDatabase();
@@ -334,7 +352,8 @@ public class HotelTables {
       System.out.printf("Choose what you want to do with reports");
     }
     private  static void otherNumber(){
-      System.out.printf("Goodbye!");
+      System.out.printf("Goodbye!\n");
+      System.exit(0);
     }
 
     private static void enterInfo(){
