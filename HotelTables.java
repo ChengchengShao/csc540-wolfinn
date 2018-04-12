@@ -412,6 +412,7 @@ public class HotelTables {
       int choiceC;
       Scanner secondMenuChoice =new Scanner (System.in);
       choiceC = secondMenuChoice.nextInt();
+      //update hotel
       if (choiceC==1){
         Scanner thirdMenuChoice =new Scanner (System.in);
         System.out.printf("Input hotelID:");
@@ -435,6 +436,33 @@ public class HotelTables {
             e.printStackTrace();
         }
       }
+      //update room
+      if (choiceC==2){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.printf("Input roomnumber:");
+        int roomnumber=thirdMenuChoice.nextInt();
+        System.out.printf("Input hotelID:");
+        int hotelID=thirdMenuChoice.nextInt();
+        System.out.printf("Input roomcategory:");
+        Scanner fourthMenuChoice =new Scanner (System.in);
+        String roomcategory =fourthMenuChoice.nextLine();
+        System.out.printf("Input maxcapacityallowed:");
+        int maxcapacityallowed=thirdMenuChoice.nextInt();
+        System.out.printf("Input nightlyrate:");
+        float nightlyrate=thirdMenuChoice.nextFloat();
+        System.out.printf("Input availability:");
+        String availability =fourthMenuChoice.nextLine();
+        try{
+          connectToDatabase();
+          statement.executeUpdate("UPDATE room SET roomcategory ='"+roomcategory+"', maxcapacityallowed ="+maxcapacityallowed+", nightlyrate ="+nightlyrate+", availability ='"+availability+"' WHERE roomnumber ="+roomnumber+" AND hotelID ="+hotelID+";");
+          System.out.println("Roomnumber "+roomnumber+" has been updated successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+      
       else{
         mainmenu();
       }
