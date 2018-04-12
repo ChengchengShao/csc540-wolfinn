@@ -463,6 +463,38 @@ public class HotelTables {
         }
       }
       
+      //update staff
+      if (choiceC==3){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.printf("Input staffID:");
+        int staffID=thirdMenuChoice.nextInt();
+        System.out.printf("Input name:");
+        Scanner fourthMenuChoice =new Scanner (System.in);
+        String name =fourthMenuChoice.nextLine();
+        System.out.printf("Input age:");
+        int age=thirdMenuChoice.nextInt();
+        System.out.printf("Input jobtitle:");
+        String jobtitle =fourthMenuChoice.nextLine();
+        System.out.printf("Input hotelID:");
+        int hotelID=thirdMenuChoice.nextInt();                        
+        System.out.printf("Input department:");
+        String department =fourthMenuChoice.nextLine();
+        System.out.printf("Input phonenumber:");
+        int phonenumber=thirdMenuChoice.nextInt(); 
+        System.out.printf("Input address:");
+        String address =fourthMenuChoice.nextLine();        
+        
+        try{
+          connectToDatabase();
+          statement.executeUpdate("UPDATE staff SET name ='"+name+"', age ="+age+", jobtitle ='"+jobtitle+"', hotelID ="+hotelID+", department ='"+department+"', phonenumber ="+phonenumber+", address ='"+address+"' WHERE staffID ="+staffID+";");
+          System.out.println("staffID "+staffID+" has been updated successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+      
       else{
         mainmenu();
       }
