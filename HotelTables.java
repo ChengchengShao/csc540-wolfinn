@@ -17,7 +17,7 @@ public class HotelTables {
 
         initialize();
         while(!end){
-        	mainmenu();
+          mainmenu();
         }
         //System.out.println("Your choice:");
         close();
@@ -54,7 +54,7 @@ public class HotelTables {
 
     private static void initialize(){
 
-    	System.out.printf("Initializing...\n");
+      System.out.printf("Initializing...\n");
       dropTables();
       createTables();
       insertHotelTable();
@@ -67,19 +67,19 @@ public class HotelTables {
 
       //check whether all data have been loaded successfully
       try{
-      	statement.executeUpdate("use information_schema;");
-      	ResultSet rs=statement.executeQuery("select sum(table_rows) from tables where TABLE_SCHEMA = 'zsun12';");
-      	statement.executeUpdate("use zsun12;");
-      	rs.next();
-      	if(rs.getInt(1)==34) {
-      		System.out.printf("All data have been loaded successfully!\n");
-      	}
-      	else {
-      		System.out.printf("Failed to load data, please check!\n");
-      		System.exit(0);
-      	}
-      	} catch (SQLException e) {
-      			e.printStackTrace();
+        statement.executeUpdate("use information_schema;");
+        ResultSet rs=statement.executeQuery("select sum(table_rows) from tables where TABLE_SCHEMA = 'zsun12';");
+        statement.executeUpdate("use zsun12;");
+        rs.next();
+        if(rs.getInt(1)==34) {
+          System.out.printf("All data have been loaded successfully!\n");
+        }
+        else {
+          System.out.printf("Failed to load data, please check!\n");
+          System.exit(0);
+        }
+        } catch (SQLException e) {
+            e.printStackTrace();
           }
     }
 
@@ -169,7 +169,7 @@ public class HotelTables {
                     "enddate DATE NOT NULL, " +
                     "checkintime DATETIME NOT NULL, " +
                     "checkouttime DATETIME NOT NULL, " +
-                    "servicesoffered VARCHAR(128) NOT NULL, " +
+                    "servicesoffered VARCHAR(128) , " +
                     "CONSTRAINT checkin_customer_fk FOREIGN KEY(customerID) REFERENCES customer(customerID) " +
                     "ON UPDATE CASCADE, " +
                     "CONSTRAINT checkin_hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) " +
@@ -339,16 +339,16 @@ public class HotelTables {
         updateInfo();
       }
       else if (choiceB==3) {
-      	deleteInfo();
+        deleteInfo();
       }
       else if (choiceB==4) {
-      	mainmenu();
+        mainmenu();
       }
       else if (choiceB==5) {
-      	end = true;
+        end = true;
       }
       else{
-      	otherNumber();
+        otherNumber();
       }
     }
     private  static void maintainingServiceRecords(){
@@ -356,7 +356,73 @@ public class HotelTables {
       System.out.printf("Choose what you want to do with maintainingServiceRecords:\n");
       System.out.printf("1.enterInfo\n");
       System.out.printf("2.updateInfo\n");
+      int choiceF;
+      Scanner secondMenuChoice =new Scanner (System.in);
+      choiceF = secondMenuChoice.nextInt();
+
+      if (choiceF == 1){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        try{
+          connectToDatabase();
+          Statement stmt = connection.createStatement();
+          ResultSet rs = stmt.executeQuery("select customerID, hotelID, roomnumber, servicesoffered from checkin  ");
+          while (rs.next()) {
+          int customerID = rs.getInt("customerID");
+          int hotelID = rs.getInt("hotelID");
+          String servicesoffered = rs.getString("servicesoffered");
+          String roomnumber = rs.getString("roomnumber");
+          System.out.println("customerID:"+customerID+" hotelID:"+hotelID+" roomnumber:"+roomnumber+" servicesoffered:"+servicesoffered); 
+          }
+
+          System.out.println("choose the customerID you want to add service info ");
+          String ID = thirdMenuChoice.nextLine();  
+          Statement stmt1 = connection.createStatement();
+          ResultSet rs1 = stmt1.executeQuery("select servicesoffered from checkin where customerID = "+ID+";");
+          while (rs1.next()) {
+          String existservice = rs1.getString("servicesoffered");
+
+          Scanner fourthMenuChoice =new Scanner (System.in);  
+          System.out.println("enter the info you want to add in the service ");
+          String service = thirdMenuChoice.nextLine();    
+          statement.executeUpdate("UPDATE checkin  SET servicesoffered = '"+existservice+", "+service+"' where customerID = "+ID+" ;");
+          System.out.println("add successfully ");
+          }
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+
+      if (choiceF == 2){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        try{
+          connectToDatabase();
+          Statement stmt = connection.createStatement();
+          ResultSet rs = stmt.executeQuery("select customerID, hotelID, roomnumber, servicesoffered from checkin  ");
+          while (rs.next()) {
+          int customerID = rs.getInt("customerID");
+          int hotelID = rs.getInt("hotelID");
+          String servicesoffered = rs.getString("servicesoffered");
+          String roomnumber = rs.getString("roomnumber");
+          System.out.println("customerID:"+customerID+" hotelID:"+hotelID+" roomnumber:"+roomnumber+" servicesoffered:"+servicesoffered); 
+          }
+
+          System.out.println("choose the customerID you want to update service info ");
+          String ID = thirdMenuChoice.nextLine();  
+          Scanner fourthMenuChoice =new Scanner (System.in);  
+          System.out.println("enter the info you want to update in the service ");
+          String service = thirdMenuChoice.nextLine();    
+          statement.executeUpdate("UPDATE checkin  SET servicesoffered = '"+service+"' where customerID = "+ID+" ;");
+          System.out.println("update successfully ");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
     }
+
     private  static void reports(){
       System.out.printf("Choose what you want to do with reports");
     }
