@@ -632,7 +632,8 @@ private static void deleteInfo(){
           Statement stmt = connection.createStatement();
           stmt.execute("SET FOREIGN_KEY_CHECKS=0");
           statement.executeUpdate("delete from hotel where hotelID ="+hotelID+"; ");
-          System.out.println("info of hotelID"+hotelID+"has been deleted successfully");
+          statement.executeUpdate("delete from room where hotelID ="+hotelID+"; ");
+          System.out.println("info of hotel and room with hotelID "+hotelID+" has been deleted successfully");
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -649,7 +650,7 @@ private static void deleteInfo(){
           Statement stmt = connection.createStatement();
           stmt.execute("SET FOREIGN_KEY_CHECKS=0");
           statement.executeUpdate("delete from hotel where roomID ="+roomID+"; ");
-          System.out.println("info of roomID"+roomID+"has been deleted successfully");
+          System.out.println("info of roomID "+roomID+" has been deleted successfully");
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -666,7 +667,7 @@ private static void deleteInfo(){
           Statement stmt = connection.createStatement();
           stmt.execute("SET FOREIGN_KEY_CHECKS=0");
           statement.executeUpdate("delete from staff where staffID ="+staffID+"; ");
-          System.out.println("info of staffID"+staffID+"has been deleted successfully");
+          System.out.println("info of staffID "+staffID+" has been deleted successfully");
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -684,7 +685,7 @@ private static void deleteInfo(){
           Statement stmt = connection.createStatement();
           stmt.execute("SET FOREIGN_KEY_CHECKS=0");
           statement.executeUpdate("delete from customer where customerID ="+customerID+"; ");
-          System.out.println("info of customerID"+customerID+"has been deleted successfully");
+          System.out.println("info of customerID "+customerID+" has been deleted successfully");
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
