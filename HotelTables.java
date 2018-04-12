@@ -10,13 +10,16 @@ public class HotelTables {
     private static Connection connection = null;
     private static Statement statement = null;
     private static ResultSet result = null;
+    private static boolean end = false;//stop the main menu loop
 
     Scanner infoProcessMenuChoice =new Scanner (System.in);
     public static void main(String[] args) {
 
         initialize();
-        mainmenu();
-        System.out.println("Your choice:");
+        while(!end){
+        	mainmenu();
+        }
+        //System.out.println("Your choice:");
         close();
 
     }
@@ -39,6 +42,9 @@ public class HotelTables {
       }
       else if (choiceA==3) {
         reports();
+      }
+      else if (choiceA==4) {
+        end=true;
       }
       else{
         otherNumber();
@@ -331,16 +337,18 @@ public class HotelTables {
       else if (choiceB==2) {
         updateInfo();
       }
-
-    else if (choiceB==3) {
-      deleteInfo();
-    }
-    else if (choiceB==4) {
-      mainmenu();
-    }
-    else{
-      otherNumber();
-    }
+      else if (choiceB==3) {
+      	deleteInfo();
+      }
+      else if (choiceB==4) {
+      	mainmenu();
+      }
+      else if (choiceB==5) {
+      	end = true;
+      }
+      else{
+      	otherNumber();
+      }
     }
     private  static void maintainingServiceRecords(){
 
@@ -352,37 +360,37 @@ public class HotelTables {
       System.out.printf("Choose what you want to do with reports");
     }
     private  static void otherNumber(){
-      System.out.printf("Goodbye!\n");
-      System.exit(0);
+      System.out.printf("The wrong choice, please do again\n");
     }
 
     private static void enterInfo(){
 
 
-      System.out.println("Choose which table are you going to modify:\n");
-      System.out.println("1.Hotel:\n");
-      System.out.println("2.room\n");
-      System.out.println("3.staff\n");
-      System.out.println("4.customer\n");
+      System.out.println("Choose which table are you going to modify:");
+      System.out.println("1.Hotel");
+      System.out.println("2.room");
+      System.out.println("3.staff");
+      System.out.println("4.customer");
       int choiceC;
       Scanner secondMenuChoice =new Scanner (System.in);
       choiceC = secondMenuChoice.nextInt();
       if (choiceC==1){
         Scanner thirdMenuChoice =new Scanner (System.in);
-        System.out.println("Input hotelID\n");
+        System.out.printf("Input hotelID:");
         int hotelID=thirdMenuChoice.nextInt();
-        System.out.println("Input phonenumber\n");
+        System.out.printf("Input phonenumber:");
         int phonenumber=thirdMenuChoice.nextInt();
-        System.out.println("Input managerID:\n");
+        System.out.printf("Input managerID:");
         int managerID=thirdMenuChoice.nextInt();
-        System.out.println("Input name\n");
+        System.out.printf("Input name:");
         Scanner fourthMenuChoice =new Scanner (System.in);
         String name =fourthMenuChoice.nextLine();
-        System.out.println("Input address\n");
+        System.out.printf("Input address:");
         String address =fourthMenuChoice.nextLine();
         try{
           connectToDatabase();
-        statement.executeUpdate("INSERT INTO hotel VALUES"+" ('"+hotelID+"','"+name+"','"+address+"','"+phonenumber+"','"+managerID+"');");
+          statement.executeUpdate("INSERT INTO hotel VALUES"+" ('"+hotelID+"','"+name+"','"+address+"','"+phonenumber+"','"+managerID+"');");
+          System.out.println("Hotel "+name+" has been added successfully!");
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
