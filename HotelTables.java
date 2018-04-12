@@ -44,6 +44,7 @@ public class HotelTables {
         reports();
       }
       else if (choiceA==4) {
+        System.out.printf("Thank you, Goodbye!");
         end=true;
       }
       else{
@@ -52,7 +53,7 @@ public class HotelTables {
     }
 
     private static void initialize(){
-    	
+
     	System.out.printf("Initializing...\n");
       dropTables();
       createTables();
@@ -63,7 +64,7 @@ public class HotelTables {
       insertServices();
       insertstaff();
       insertcheckin();
-      
+
       //check whether all data have been loaded successfully
       try{
       	statement.executeUpdate("use information_schema;");
@@ -81,7 +82,7 @@ public class HotelTables {
       			e.printStackTrace();
           }
     }
-    
+
     private static void dropTables(){
       try{
         connectToDatabase();
@@ -396,11 +397,91 @@ public class HotelTables {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
       }
 
       else if (choiceC==2) {
         Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.printf("Input roomnumber:");
+        int roomnumber=thirdMenuChoice.nextInt();
+        System.out.printf("Input hotelID:");
+        int hotelID=thirdMenuChoice.nextInt();
+        System.out.printf("Input roomcategory:");
+        Scanner fourthMenuChoice =new Scanner (System.in);
+        String roomcategory =fourthMenuChoice.nextLine();
+        System.out.printf("Input maxcapacityallowed:");
+        int maxcapacityallowed=thirdMenuChoice.nextInt();
+        System.out.printf("Input nightlyrate:");
+        float nightlyrate=thirdMenuChoice.nextFloat();
+        System.out.printf("Input availability:");
+        String availability =fourthMenuChoice.nextLine();
+        try{
+          connectToDatabase();
+          statement.executeUpdate("INSERT INTO room VALUES"+" ('"+roomnumber+"','"+hotelID+"','"+roomcategory+"','"+maxcapacityallowed+"','"+nightlyrate+"','"+availability+"');");
+          System.out.println("Room "+roomnumber+" has been added successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
       }
+
+
+    else if (choiceC==3) {
+      Scanner thirdMenuChoice =new Scanner (System.in);
+      System.out.printf("Input staffID:");
+      int staffID=thirdMenuChoice.nextInt();
+      System.out.printf("Input name:");
+      Scanner fourthMenuChoice =new Scanner (System.in);
+      String name =fourthMenuChoice.nextLine();
+      System.out.printf("Input age:");
+      int age=thirdMenuChoice.nextInt();
+      System.out.printf("Input jobtitle:");
+      String jobtitle =fourthMenuChoice.nextLine();
+      System.out.printf("Input hotelID:");
+      int hotelID=thirdMenuChoice.nextInt();
+      System.out.printf("Input department:");
+      String department =fourthMenuChoice.nextLine();
+      System.out.printf("Input phonenumber:");
+      int phonenumber=thirdMenuChoice.nextInt();
+      System.out.printf("Input address:");
+      String address =fourthMenuChoice.nextLine();
+      try{
+        connectToDatabase();
+        statement.executeUpdate("INSERT INTO staff VALUES"+" ('"+staffID+"','"+name+"','"+age+"','"+jobtitle+"','"+hotelID+"','"+department+"','"+phonenumber+"','"+address+"');");
+        System.out.println("Staff "+name+" has been added successfully!");
+      }catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+    }
+
+      else if (choiceC==4) {
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.printf("Input customerID:");
+        int customerID=thirdMenuChoice.nextInt();
+        System.out.printf("Input name:");
+        Scanner fourthMenuChoice =new Scanner (System.in);
+        String name =fourthMenuChoice.nextLine();
+        System.out.printf("Input birthday:");
+        String birthday =fourthMenuChoice.nextLine();
+        System.out.printf("Input phonenumber:");
+        String phonenumber =fourthMenuChoice.nextLine();
+        System.out.printf("Input email:");
+        String email =fourthMenuChoice.nextLine();
+        try{
+          connectToDatabase();
+          statement.executeUpdate("INSERT INTO customer VALUES"+" ('"+customerID+"','"+name+"','"+birthday+"','"+phonenumber+"','"+email+"');");
+          System.out.println("Customer "+name+" has been added successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+      }
+
       else{
         mainmenu();
       }
@@ -466,7 +547,7 @@ public class HotelTables {
             e.printStackTrace();
         }
       }
-      
+
       //update staff
       if (choiceC==3){
         Scanner thirdMenuChoice =new Scanner (System.in);
@@ -480,14 +561,14 @@ public class HotelTables {
         System.out.printf("Input jobtitle:");
         String jobtitle =fourthMenuChoice.nextLine();
         System.out.printf("Input hotelID:");
-        int hotelID=thirdMenuChoice.nextInt();                        
+        int hotelID=thirdMenuChoice.nextInt();
         System.out.printf("Input department:");
         String department =fourthMenuChoice.nextLine();
         System.out.printf("Input phonenumber:");
-        int phonenumber=thirdMenuChoice.nextInt(); 
+        int phonenumber=thirdMenuChoice.nextInt();
         System.out.printf("Input address:");
-        String address =fourthMenuChoice.nextLine();        
-        
+        String address =fourthMenuChoice.nextLine();
+
         try{
           connectToDatabase();
           statement.executeUpdate("UPDATE staff SET name ='"+name+"', age ="+age+", jobtitle ='"+jobtitle+"', hotelID ="+hotelID+", department ='"+department+"', phonenumber ="+phonenumber+", address ='"+address+"' WHERE staffID ="+staffID+";");
@@ -508,12 +589,12 @@ public class HotelTables {
         Scanner fourthMenuChoice =new Scanner (System.in);
         String name =fourthMenuChoice.nextLine();
         System.out.printf("Input birthday:");
-        String birthday =fourthMenuChoice.nextLine();                 
+        String birthday =fourthMenuChoice.nextLine();
         System.out.printf("Input phonenumber:");
         String phonenumber =fourthMenuChoice.nextLine();
         System.out.printf("Input email:");
-        String email =fourthMenuChoice.nextLine();        
-        
+        String email =fourthMenuChoice.nextLine();
+
         try{
           connectToDatabase();
           statement.executeUpdate("UPDATE customer SET name ='"+name+"', birthday ='"+birthday+"', phonenumber ='"+phonenumber+"', email ='"+email+"' WHERE customerID ="+customerID+";");
@@ -524,7 +605,7 @@ public class HotelTables {
             e.printStackTrace();
         }
       }
-            
+
       else{
         mainmenu();
       }
@@ -547,9 +628,9 @@ private static void deleteInfo(){
         System.out.println("enter the hotelID to delete its info");
         int hotelID=thirdMenuChoice.nextInt();
         try{
-          connectToDatabase();   
+          connectToDatabase();
           Statement stmt = connection.createStatement();
-          stmt.execute("SET FOREIGN_KEY_CHECKS=0");                      
+          stmt.execute("SET FOREIGN_KEY_CHECKS=0");
           statement.executeUpdate("delete from hotel where hotelID ="+hotelID+"; ");
           System.out.println("info of hotelID"+hotelID+"has been deleted successfully");
         }catch (ClassNotFoundException e) {
@@ -597,7 +678,7 @@ private static void deleteInfo(){
       if (choiceD == 4){
         Scanner thirdMenuChoice =new Scanner (System.in);
         System.out.println("enter the customerID to delete its info");
-        int customerID=thirdMenuChoice.nextInt();   
+        int customerID=thirdMenuChoice.nextInt();
         try{
           connectToDatabase();
           Statement stmt = connection.createStatement();
@@ -615,6 +696,8 @@ private static void deleteInfo(){
       }
 
     }
+
+
 
 
 
