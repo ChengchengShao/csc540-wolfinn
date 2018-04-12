@@ -494,7 +494,33 @@ public class HotelTables {
             e.printStackTrace();
         }
       }
-      
+
+      //update customer
+      if (choiceC==4){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.printf("Input customerID:");
+        int customerID=thirdMenuChoice.nextInt();
+        System.out.printf("Input name:");
+        Scanner fourthMenuChoice =new Scanner (System.in);
+        String name =fourthMenuChoice.nextLine();
+        System.out.printf("Input birthday:");
+        String birthday =fourthMenuChoice.nextLine();                 
+        System.out.printf("Input phonenumber:");
+        String phonenumber =fourthMenuChoice.nextLine();
+        System.out.printf("Input email:");
+        String email =fourthMenuChoice.nextLine();        
+        
+        try{
+          connectToDatabase();
+          statement.executeUpdate("UPDATE customer SET name ='"+name+"', birthday ='"+birthday+"', phonenumber ='"+phonenumber+"', email ='"+email+"' WHERE customerID ="+customerID+";");
+          System.out.println("customerID "+customerID+" has been updated successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+            
       else{
         mainmenu();
       }
