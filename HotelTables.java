@@ -184,7 +184,7 @@ public class HotelTables {
                     "paymentmethod VARCHAR(128) NOT NULL," +
                     "cardnumber VARCHAR(128)," +
                     "CONSTRAINT customer_fk FOREIGN KEY(customerID) REFERENCES customer(customerID)" +
-                    "ON UPDATE CASCADE" +
+                    "ON UPDATE CASCADE " +
                     ")");
             statement.executeUpdate("CREATE TABLE services(" +
                     "servicename VARCHAR(128) PRIMARY KEY NOT NULL," +
@@ -528,7 +528,87 @@ public class HotelTables {
     }
 
 
-    private static void deleteInfo(){
+private static void deleteInfo(){
+
+      System.out.println("Choose which table are you going to delete info on:");
+      System.out.println("1.hotel");
+      System.out.println("2.room");
+      System.out.println("3.staff");
+      System.out.println("4.customer");
+      int choiceD;
+      Scanner secondMenuChoice =new Scanner (System.in);
+      choiceD = secondMenuChoice.nextInt();
+        if (choiceD == 1){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.println("enter the hotelID to delete its info");
+        int hotelID=thirdMenuChoice.nextInt();
+        try{
+          connectToDatabase();   
+          Statement stmt = connection.createStatement();
+          stmt.execute("SET FOREIGN_KEY_CHECKS=0");                      
+          statement.executeUpdate("delete from hotel where hotelID ="+hotelID+"; ");
+          System.out.println("info of hotelID"+hotelID+"has been deleted successfully");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+
+      if (choiceD == 2){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.println("enter the roomID to delete its info");
+        int roomID=thirdMenuChoice.nextInt();
+        try{
+          connectToDatabase();
+          Statement stmt = connection.createStatement();
+          stmt.execute("SET FOREIGN_KEY_CHECKS=0");
+          statement.executeUpdate("delete from hotel where roomID ="+roomID+"; ");
+          System.out.println("info of roomID"+roomID+"has been deleted successfully");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+
+      if (choiceD == 3){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.println("enter the staffID to delete its info");
+        int staffID=thirdMenuChoice.nextInt();
+        try{
+          connectToDatabase();
+          Statement stmt = connection.createStatement();
+          stmt.execute("SET FOREIGN_KEY_CHECKS=0");
+          statement.executeUpdate("delete from staff where staffID ="+staffID+"; ");
+          System.out.println("info of staffID"+staffID+"has been deleted successfully");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+
+
+      if (choiceD == 4){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.println("enter the customerID to delete its info");
+        int customerID=thirdMenuChoice.nextInt();   
+        try{
+          connectToDatabase();
+          Statement stmt = connection.createStatement();
+          stmt.execute("SET FOREIGN_KEY_CHECKS=0");
+          statement.executeUpdate("delete from customer where customerID ="+customerID+"; ");
+          System.out.println("info of customerID"+customerID+"has been deleted successfully");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+      else{
+        mainmenu();
+      }
 
     }
 
