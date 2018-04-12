@@ -404,6 +404,41 @@ public class HotelTables {
 
     private static void updateInfo(){
 
+      System.out.println("Choose which table are you going to update:");
+      System.out.println("1.Hotel");
+      System.out.println("2.room");
+      System.out.println("3.staff");
+      System.out.println("4.customer");
+      int choiceC;
+      Scanner secondMenuChoice =new Scanner (System.in);
+      choiceC = secondMenuChoice.nextInt();
+      if (choiceC==1){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.printf("Input hotelID:");
+        int hotelID=thirdMenuChoice.nextInt();
+        System.out.printf("Input phonenumber:");
+        int phonenumber=thirdMenuChoice.nextInt();
+        System.out.printf("Input managerID:");
+        int managerID=thirdMenuChoice.nextInt();
+        System.out.printf("Input name:");
+        Scanner fourthMenuChoice =new Scanner (System.in);
+        String name =fourthMenuChoice.nextLine();
+        System.out.printf("Input address:");
+        String address =fourthMenuChoice.nextLine();
+        try{
+          connectToDatabase();
+          statement.executeUpdate("UPDATE hotel SET name ='"+name+"', address ='"+address+"', phonenumber ='"+phonenumber+"', managerID ='"+managerID+"' WHERE hotelID ="+hotelID+";");
+          System.out.println("HotelID "+hotelID+" has been updated successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+      else{
+        mainmenu();
+      }
+
     }
 
 
