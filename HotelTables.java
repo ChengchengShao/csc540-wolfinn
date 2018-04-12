@@ -633,7 +633,9 @@ private static void deleteInfo(){
           stmt.execute("SET FOREIGN_KEY_CHECKS=0");
           statement.executeUpdate("delete from hotel where hotelID ="+hotelID+"; ");
           statement.executeUpdate("delete from room where hotelID ="+hotelID+"; ");
-          System.out.println("info of hotel and room with hotelID "+hotelID+" has been deleted successfully");
+          statement.executeUpdate("delete from staff where hotelID ="+hotelID+"; ");
+          System.out.println("info of hotel hotelid "+hotelID+" has been deleted successfully");
+          System.out.println("info of room and staff with hotelid "+hotelID+" has also been deleted ");
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
