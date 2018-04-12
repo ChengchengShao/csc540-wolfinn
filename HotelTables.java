@@ -10,13 +10,16 @@ public class HotelTables {
     private static Connection connection = null;
     private static Statement statement = null;
     private static ResultSet result = null;
+    private static boolean end = false;//stop the main menu loop
 
     Scanner infoProcessMenuChoice =new Scanner (System.in);
     public static void main(String[] args) {
 
         initialize();
-        mainmenu();
-        System.out.println("Your choice:");
+        while(!end){
+        	mainmenu();
+        }
+        //System.out.println("Your choice:");
         close();
 
     }
@@ -40,13 +43,17 @@ public class HotelTables {
       else if (choiceA==3) {
         reports();
       }
+      else if (choiceA==4) {
+        end=true;
+      }
       else{
         otherNumber();
       }
     }
 
     private static void initialize(){
-
+    	
+    	System.out.printf("Initializing...\n");
       dropTables();
       createTables();
       insertHotelTable();
@@ -56,8 +63,25 @@ public class HotelTables {
       insertServices();
       insertstaff();
       insertcheckin();
-
+      
+      //check whether all data have been loaded successfully
+      try{
+      	statement.executeUpdate("use information_schema;");
+      	ResultSet rs=statement.executeQuery("select sum(table_rows) from tables where TABLE_SCHEMA = 'zsun12';");
+      	statement.executeUpdate("use zsun12;");
+      	rs.next();
+      	if(rs.getInt(1)==34) {
+      		System.out.printf("All data have been loaded successfully!\n");
+      	}
+      	else {
+      		System.out.printf("Failed to load data, please check!\n");
+      		System.exit(0);
+      	}
+      	} catch (SQLException e) {
+      			e.printStackTrace();
+          }
     }
+    
     private static void dropTables(){
       try{
         connectToDatabase();
@@ -313,16 +337,18 @@ public class HotelTables {
       else if (choiceB==2) {
         updateInfo();
       }
-
-    else if (choiceB==3) {
-      deleteInfo();
-    }
-    else if (choiceB==4) {
-      mainmenu();
-    }
-    else{
-      otherNumber();
-    }
+      else if (choiceB==3) {
+      	deleteInfo();
+      }
+      else if (choiceB==4) {
+      	mainmenu();
+      }
+      else if (choiceB==5) {
+      	end = true;
+      }
+      else{
+      	otherNumber();
+      }
     }
     private  static void maintainingServiceRecords(){
 
@@ -334,36 +360,37 @@ public class HotelTables {
       System.out.printf("Choose what you want to do with reports");
     }
     private  static void otherNumber(){
-      System.out.printf("Goodbye!");
+      System.out.printf("The wrong choice, please do again\n");
     }
 
     private static void enterInfo(){
 
 
-      System.out.println("Choose which table are you going to modify:\n");
-      System.out.println("1.Hotel:\n");
-      System.out.println("2.room\n");
-      System.out.println("3.staff\n");
-      System.out.println("4.customer\n");
+      System.out.println("Choose which table are you going to modify:");
+      System.out.println("1.Hotel");
+      System.out.println("2.room");
+      System.out.println("3.staff");
+      System.out.println("4.customer");
       int choiceC;
       Scanner secondMenuChoice =new Scanner (System.in);
       choiceC = secondMenuChoice.nextInt();
       if (choiceC==1){
         Scanner thirdMenuChoice =new Scanner (System.in);
-        System.out.println("Input hotelID\n");
+        System.out.printf("Input hotelID:");
         int hotelID=thirdMenuChoice.nextInt();
-        System.out.println("Input phonenumber\n");
+        System.out.printf("Input phonenumber:");
         int phonenumber=thirdMenuChoice.nextInt();
-        System.out.println("Input managerID:\n");
+        System.out.printf("Input managerID:");
         int managerID=thirdMenuChoice.nextInt();
-        System.out.println("Input name\n");
+        System.out.printf("Input name:");
         Scanner fourthMenuChoice =new Scanner (System.in);
         String name =fourthMenuChoice.nextLine();
-        System.out.println("Input address\n");
+        System.out.printf("Input address:");
         String address =fourthMenuChoice.nextLine();
         try{
           connectToDatabase();
-        statement.executeUpdate("INSERT INTO hotel VALUES"+" ('"+hotelID+"','"+name+"','"+address+"','"+phonenumber+"','"+managerID+"');");
+          statement.executeUpdate("INSERT INTO hotel VALUES"+" ('"+hotelID+"','"+name+"','"+address+"','"+phonenumber+"','"+managerID+"');");
+          System.out.println("Hotel "+name+" has been added successfully!");
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -380,6 +407,127 @@ public class HotelTables {
   }
 
     private static void updateInfo(){
+
+      System.out.println("Choose which table are you going to update:");
+      System.out.println("1.Hotel");
+      System.out.println("2.room");
+      System.out.println("3.staff");
+      System.out.println("4.customer");
+      int choiceC;
+      Scanner secondMenuChoice =new Scanner (System.in);
+      choiceC = secondMenuChoice.nextInt();
+      //update hotel
+      if (choiceC==1){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.printf("Input hotelID:");
+        int hotelID=thirdMenuChoice.nextInt();
+        System.out.printf("Input phonenumber:");
+        int phonenumber=thirdMenuChoice.nextInt();
+        System.out.printf("Input managerID:");
+        int managerID=thirdMenuChoice.nextInt();
+        System.out.printf("Input name:");
+        Scanner fourthMenuChoice =new Scanner (System.in);
+        String name =fourthMenuChoice.nextLine();
+        System.out.printf("Input address:");
+        String address =fourthMenuChoice.nextLine();
+        try{
+          connectToDatabase();
+          statement.executeUpdate("UPDATE hotel SET name ='"+name+"', address ='"+address+"', phonenumber ='"+phonenumber+"', managerID ='"+managerID+"' WHERE hotelID ="+hotelID+";");
+          System.out.println("HotelID "+hotelID+" has been updated successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+      //update room
+      if (choiceC==2){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.printf("Input roomnumber:");
+        int roomnumber=thirdMenuChoice.nextInt();
+        System.out.printf("Input hotelID:");
+        int hotelID=thirdMenuChoice.nextInt();
+        System.out.printf("Input roomcategory:");
+        Scanner fourthMenuChoice =new Scanner (System.in);
+        String roomcategory =fourthMenuChoice.nextLine();
+        System.out.printf("Input maxcapacityallowed:");
+        int maxcapacityallowed=thirdMenuChoice.nextInt();
+        System.out.printf("Input nightlyrate:");
+        float nightlyrate=thirdMenuChoice.nextFloat();
+        System.out.printf("Input availability:");
+        String availability =fourthMenuChoice.nextLine();
+        try{
+          connectToDatabase();
+          statement.executeUpdate("UPDATE room SET roomcategory ='"+roomcategory+"', maxcapacityallowed ="+maxcapacityallowed+", nightlyrate ="+nightlyrate+", availability ='"+availability+"' WHERE roomnumber ="+roomnumber+" AND hotelID ="+hotelID+";");
+          System.out.println("Roomnumber "+roomnumber+" has been updated successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+      
+      //update staff
+      if (choiceC==3){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.printf("Input staffID:");
+        int staffID=thirdMenuChoice.nextInt();
+        System.out.printf("Input name:");
+        Scanner fourthMenuChoice =new Scanner (System.in);
+        String name =fourthMenuChoice.nextLine();
+        System.out.printf("Input age:");
+        int age=thirdMenuChoice.nextInt();
+        System.out.printf("Input jobtitle:");
+        String jobtitle =fourthMenuChoice.nextLine();
+        System.out.printf("Input hotelID:");
+        int hotelID=thirdMenuChoice.nextInt();                        
+        System.out.printf("Input department:");
+        String department =fourthMenuChoice.nextLine();
+        System.out.printf("Input phonenumber:");
+        int phonenumber=thirdMenuChoice.nextInt(); 
+        System.out.printf("Input address:");
+        String address =fourthMenuChoice.nextLine();        
+        
+        try{
+          connectToDatabase();
+          statement.executeUpdate("UPDATE staff SET name ='"+name+"', age ="+age+", jobtitle ='"+jobtitle+"', hotelID ="+hotelID+", department ='"+department+"', phonenumber ="+phonenumber+", address ='"+address+"' WHERE staffID ="+staffID+";");
+          System.out.println("staffID "+staffID+" has been updated successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+
+      //update customer
+      if (choiceC==4){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.printf("Input customerID:");
+        int customerID=thirdMenuChoice.nextInt();
+        System.out.printf("Input name:");
+        Scanner fourthMenuChoice =new Scanner (System.in);
+        String name =fourthMenuChoice.nextLine();
+        System.out.printf("Input birthday:");
+        String birthday =fourthMenuChoice.nextLine();                 
+        System.out.printf("Input phonenumber:");
+        String phonenumber =fourthMenuChoice.nextLine();
+        System.out.printf("Input email:");
+        String email =fourthMenuChoice.nextLine();        
+        
+        try{
+          connectToDatabase();
+          statement.executeUpdate("UPDATE customer SET name ='"+name+"', birthday ='"+birthday+"', phonenumber ='"+phonenumber+"', email ='"+email+"' WHERE customerID ="+customerID+";");
+          System.out.println("customerID "+customerID+" has been updated successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+            
+      else{
+        mainmenu();
+      }
 
     }
 
