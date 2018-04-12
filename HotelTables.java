@@ -220,10 +220,10 @@ public class HotelTables {
 
         statement.executeUpdate("INSERT INTO room VALUES (1,1,'Economy',1,100,'Yes')");
         statement.executeUpdate("INSERT INTO room VALUES (2,1,'Deluxe',2,200,'Yes')");
-        statement.executeUpdate("INSERT INTO room VALUES (3,2,'Economy',1,100,'YES')");
+        statement.executeUpdate("INSERT INTO room VALUES (3,2,'Economy',1,100,'Yes')");
         statement.executeUpdate("INSERT INTO room VALUES (2,3,'Executive',3,1000,'No')");
-        statement.executeUpdate("INSERT INTO room VALUES (1,4,'Presidential',4,5000,'YES')");
-        statement.executeUpdate("INSERT INTO room VALUES (5,1,'Deluxe',2,200,'YES')");
+        statement.executeUpdate("INSERT INTO room VALUES (1,4,'Presidential',4,5000,'Yes')");
+        statement.executeUpdate("INSERT INTO room VALUES (5,1,'Deluxe',2,200,'Yes')");
       }
       catch (ClassNotFoundException e) {
           e.printStackTrace();
@@ -327,8 +327,9 @@ public class HotelTables {
       System.out.printf("1.enterInfo\n");
       System.out.printf("2.updateInfo\n");
       System.out.printf("3.deleteInfo\n");
-      System.out.printf("4.Back to main menu\n");
-      System.out.printf("5.Exit\n");
+      System.out.printf("4.roomRequest\n");
+      System.out.printf("5.Back to main menu\n");
+      System.out.printf("6.Exit\n");
       int choiceB;
       Scanner secondMenuChoice =new Scanner (System.in);
       choiceB = secondMenuChoice.nextInt();
@@ -342,9 +343,12 @@ public class HotelTables {
       	deleteInfo();
       }
       else if (choiceB==4) {
-      	mainmenu();
+        roomRequest();
       }
       else if (choiceB==5) {
+      	mainmenu();
+      }
+      else if (choiceB==6) {
       	end = true;
       }
       else{
@@ -699,6 +703,55 @@ private static void deleteInfo(){
       }
 
     }
+
+    private static void roomRequest(){
+      System.out.println("1.Choose a roomnumber:");
+      System.out.println("2.Choose a roomtype:");
+      int choiceD;
+      Scanner secondMenuChoice =new Scanner (System.in);
+      choiceD = secondMenuChoice.nextInt();
+      if(choiceD==1){
+          System.out.println("roomnumber?:\n");
+          Scanner thirdMenuChoice =new Scanner (System.in);
+          int roomID=thirdMenuChoice.nextInt();
+          System.out.println("Which hotel?:\n");
+          int hotelID=thirdMenuChoice.nextInt();
+          try{
+          connectToDatabase();
+          ResultSet result =statement.executeQuery("select count(*) from room where roomnumber='"+roomID+"'and hotelID='"+hotelID+"';");
+          while(result.next())
+          {
+            String a=result.getString(1);
+            System.out.println("The number of available room is "+a);
+          }
+          mainmenu();
+      }catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+    }
+      else if (choiceD==2) {
+        System.out.println("roomtype?:\n");
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        String roomcategory=thirdMenuChoice.next();
+        try{
+          connectToDatabase();
+          ResultSet result=statement.executeQuery("select count(*) from room where roomcategory='"+roomcategory+"'and availability='Yes';");
+          while(result.next())
+          {
+            String a=result.getString(1);
+            System.out.println("The number of available room is "+a);
+          }
+          mainmenu();
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+    }
+
 
 
 
