@@ -169,7 +169,7 @@ public class HotelTables {
                     "enddate DATE NOT NULL, " +
                     "checkintime DATETIME NOT NULL, " +
                     "checkouttime DATETIME NOT NULL, " +
-                    "servicesoffered VARCHAR(128) , " +
+                    "servicesoffered VARCHAR(128) NOT NULL, " +
                     "CONSTRAINT checkin_customer_fk FOREIGN KEY(customerID) REFERENCES customer(customerID) " +
                     "ON UPDATE CASCADE, " +
                     "CONSTRAINT checkin_hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) " +
@@ -220,10 +220,10 @@ public class HotelTables {
 
         statement.executeUpdate("INSERT INTO room VALUES (1,1,'Economy',1,100,'Yes')");
         statement.executeUpdate("INSERT INTO room VALUES (2,1,'Deluxe',2,200,'Yes')");
-        statement.executeUpdate("INSERT INTO room VALUES (3,2,'Economy',1,100,'YES')");
+        statement.executeUpdate("INSERT INTO room VALUES (3,2,'Economy',1,100,'Yes')");
         statement.executeUpdate("INSERT INTO room VALUES (2,3,'Executive',3,1000,'No')");
-        statement.executeUpdate("INSERT INTO room VALUES (1,4,'Presidential',4,5000,'YES')");
-        statement.executeUpdate("INSERT INTO room VALUES (5,1,'Deluxe',2,200,'YES')");
+        statement.executeUpdate("INSERT INTO room VALUES (1,4,'Presidential',4,5000,'Yes')");
+        statement.executeUpdate("INSERT INTO room VALUES (5,1,'Deluxe',2,200,'Yes')");
       }
       catch (ClassNotFoundException e) {
           e.printStackTrace();
@@ -327,8 +327,10 @@ public class HotelTables {
       System.out.printf("1.enterInfo\n");
       System.out.printf("2.updateInfo\n");
       System.out.printf("3.deleteInfo\n");
-      System.out.printf("4.Back to main menu\n");
-      System.out.printf("5.Exit\n");
+      System.out.printf("4.roomRequest\n");
+      System.out.printf("5.Assign and realease Room\n");
+      System.out.printf("6.Back to main menu\n");
+      System.out.printf("7.Exit\n");
       int choiceB;
       Scanner secondMenuChoice =new Scanner (System.in);
       choiceB = secondMenuChoice.nextInt();
@@ -342,9 +344,15 @@ public class HotelTables {
         deleteInfo();
       }
       else if (choiceB==4) {
-        mainmenu();
+        roomRequest();
       }
       else if (choiceB==5) {
+        assignAndRealeaseRoom();
+      }
+      else if (choiceB==6) {
+        mainmenu();
+      }
+      else if (choiceB==7) {
         end = true;
       }
       else{
@@ -423,6 +431,7 @@ public class HotelTables {
       }
     }
 
+    
     private  static void reports(){
       System.out.printf("Choose what you want to do with reports");
     }
@@ -765,6 +774,90 @@ private static void deleteInfo(){
       }
 
     }
+
+    private static void roomRequest(){
+      System.out.println("1.Choose a roomnumber");
+      System.out.println("2.Choose a roomtype");
+      int choiceD;
+      Scanner secondMenuChoice =new Scanner (System.in);
+      choiceD = secondMenuChoice.nextInt();
+      if(choiceD==1){
+          System.out.println("roomnumber?:\n");
+          Scanner thirdMenuChoice =new Scanner (System.in);
+          int roomID=thirdMenuChoice.nextInt();
+          System.out.println("Which hotel?:\n");
+          int hotelID=thirdMenuChoice.nextInt();
+          try{
+          connectToDatabase();
+          ResultSet result =statement.executeQuery("select count(*) from room where roomnumber='"+roomID+"'and hotelID='"+hotelID+"';");
+          while(result.next())
+          {
+            String a=result.getString(1);
+            System.out.println("The number of available room is "+a);
+          }
+          mainmenu();
+      }catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+    }
+      else if (choiceD==2) {
+        System.out.println("roomtype?:\n");
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        String roomcategory=thirdMenuChoice.next();
+        try{
+          connectToDatabase();
+          ResultSet result=statement.executeQuery("select count(*) from room where roomcategory='"+roomcategory+"'and availability='Yes';");
+          while(result.next())
+          {
+            String a=result.getString(1);
+            System.out.println("The number of available room is "+a);
+          }
+          mainmenu();
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+    }
+
+    private static void assignAndRealeaseRoom(){
+      Scanner secondMenuChoice =new Scanner (System.in);
+      Scanner thirdMenuChoice =new Scanner (System.in);
+      System.out.println("Please enter the customerID:");
+      int customerID=secondMenuChoice.nextInt();
+      System.out.println("Please enter the roomnumber the customer request:");
+      int roomnumber =secondMenuChoice.nextInt();
+      System.out.println("Please enter the hotelID the customer is in:");
+      int hotelID=secondMenuChoice.nextInt();
+      System.out.println("Please enter the number of guests:");
+      int numberofguests=secondMenuChoice.nextInt();
+      System.out.println("Please enter the checkin date:");
+      String startdate=thirdMenuChoice.nextLine();
+      System.out.println("Please enter the checkout date:");
+      String enddate=thirdMenuChoice.nextLine();
+      System.out.println("Please enter the checkin time:");
+      String checkintime=thirdMenuChoice.nextLine();
+      System.out.println("Please enter the checkout time:");
+      String checkouttime=thirdMenuChoice.nextLine();
+      System.out.println("Please enter service offered:");
+      String servicesoffered=thirdMenuChoice.nextLine();
+
+      try{
+        connectToDatabase();
+        statement.executeUpdate("INSERT INTO checkin VALUES"+" ('"+customerID+"','"+hotelID+"','"+roomnumber+"','"+numberofguests+"','"+startdate+"','"+enddate+"','"+checkintime+"','"+checkouttime+"','"+servicesoffered+"');");
+        System.out.println("checkinInfo been added successfully!");
+        statement.executeUpdate("UPDATE room SET availability ='No' WHERE roomnumber ='"+roomnumber+"';");
+        System.out.println("Room"+roomnumber+"released!");
+      }catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+    }
+
 
 
 
