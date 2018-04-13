@@ -444,17 +444,63 @@ public class HotelTables {
       choiceC = secondMenuChoice.nextInt();
       
       if (choiceC==1){
-        Scanner thirdMenuChoice =new Scanner (System.in);
-        System.out.println("Report occupancy by hotel, room type, date range, and city");
-        try{
-          connectToDatabase();
-          statement.executeUpdate(";");
-          System.out.println("successfully!");
+       try{
+	        connectToDatabase();
+	        Statement stmt = connection.createStatement();
+
+	        ResultSet rs = stmt.executeQuery("select D.name as hotelname, if(C.B is null, 0, C.B) as occupancy from "+
+	                                         "(select hotelID,count(*) as B from room where availability = 'No' group by hotelID) C "+
+	                                         "right join (select * from hotel) D on C.hotelID=D.hotelID;");
+	        System.out.println("************Report occupancy by hotel************"); 
+	        while (rs.next()) {
+	        	String hotelname = rs.getString("hotelname");
+	        	int occupancy = rs.getInt("occupancy");
+	        	System.out.println(hotelname+" :"+occupancy); 
+	        }
+	  
+	        rs = stmt.executeQuery("select D.A as roomcategory, if(C.B is null, 0, C.B) as occupancy from "+
+	                                         "(select roomcategory as A,count(*) as B from room where availability = 'No' group by roomcategory) C "+
+																		       "right join (select distinct roomcategory as A from room) D on C.A=D.A;");
+	        System.out.println("************Report occupancy by room type************"); 
+	        while (rs.next()) {
+	        	String roomcategory = rs.getString("roomcategory");
+	        	int occupancy = rs.getInt("occupancy");
+	        	System.out.println(roomcategory+" :"+occupancy); 
+	        }
+
+	        rs = stmt.executeQuery("select selected_date, count(*) as occupancy from (select selected_date from  "+
+	                              "(select adddate('1970-01-01',t4*10000 + t3*1000 + t2*100 + t1*10 + t0) selected_date from  "+
+	                              "(select 0 t0 union select 1 union select 2 union select 3 union select 4 union select 5 union "+
+	                              "select 6 union select 7 union select 8 union select 9) t0,  (select 0 t1 union select 1 union "+
+	                              "select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union "+
+	                              "select 8 union select 9) t1,  (select 0 t2 union select 1 union select 2 union select 3 union "+
+	                              "select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,  (select 0 t3 union "+
+	                              "select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union "
+	                              +"select 8 union select 9) t3,  (select 0 t4 union select 1 union select 2 union select 3 union select 4 union "+
+	                              "select 5 union select 6 union select 7 union select 8 union select 9) t4) v, "+
+	                              "checkin where selected_date between checkin.startdate and checkin.enddate) X group by selected_date;");
+	        System.out.println("************Report occupancy by daterange************"); 
+	        while (rs.next()) {
+	        	String selected_date = rs.getString("selected_date");
+	        	int occupancy = rs.getInt("occupancy");
+	        	System.out.println(selected_date+" :"+occupancy); 
+	        }
+	        
+	        rs = stmt.executeQuery("select D.address as city, if(C.B is null, 0, C.B) as occupancy from  "+
+	                              "(select hotelID,count(*) as B from room where availability = 'No' group by hotelID) C  "+
+	                              "right join (select * from hotel) D on C.hotelID=D.hotelID;");
+	        System.out.println("************Report occupancy by city************"); 
+	        while (rs.next()) {
+	        	String city = rs.getString("city");
+	        	int occupancy = rs.getInt("occupancy");
+	        	System.out.println(city+" :"+occupancy); 
+	        }
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
       }
 
       else if (choiceC==2) {
