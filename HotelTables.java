@@ -440,7 +440,7 @@ public class HotelTables {
       System.out.println("4.For each customer stay, return information on all the staff members serving the customer during the stay");
       System.out.println("5.Generate revenue earned by a given hotel during a given date range");
       int choiceC;
-      Scanner secondMenuChoice =new Scanner (/System.in);
+      Scanner secondMenuChoice =new Scanner (System.in);
       choiceC = secondMenuChoice.nextInt();
       
       if (choiceC==1){
@@ -475,12 +475,22 @@ public class HotelTables {
       }
 
       else if (choiceC==3) {
-      	Scanner thirdMenuChoice =new Scanner (System.in);
-      	System.out.println("Return information on staff grouped by their role");
         try{
-          connectToDatabase();
-          statement.executeUpdate(";");
-          System.out.println("successfully!");
+	        connectToDatabase();
+	        Statement stmt = connection.createStatement();
+	        ResultSet rs = stmt.executeQuery("select * from staff order by jobtitle;");
+	        System.out.println("staffID name age jobtitle hotelID department phonenumber address"); 
+	        while (rs.next()) {
+	        	int staffID = rs.getInt("staffID");
+	        	String name = rs.getString("name");
+	        	int age = rs.getInt("age");
+	        	String jobtitle = rs.getString("jobtitle");
+	        	int hotelID = rs.getInt("hotelID");
+	        	String department = rs.getString("department");
+	        	int phonenumber = rs.getInt("phonenumber");
+	        	String address = rs.getString("address");
+	        	System.out.println(""+staffID+" "+name+" "+age+" "+jobtitle+" "+hotelID+" "+department+" "+phonenumber+" "+address); 
+	        }
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
