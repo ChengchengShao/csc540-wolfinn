@@ -440,7 +440,7 @@ public class HotelTables {
       System.out.println("4.For each customer stay, return information on all the staff members serving the customer during the stay");
       System.out.println("5.Generate revenue earned by a given hotel during a given date range");
       int choiceC;
-      Scanner secondMenuChoice =new Scanner (System.in);
+      Scanner secondMenuChoice =new Scanner (/System.in);
       choiceC = secondMenuChoice.nextInt();
       
       if (choiceC==1){
@@ -458,12 +458,15 @@ public class HotelTables {
       }
 
       else if (choiceC==2) {
-      	Scanner thirdMenuChoice =new Scanner (System.in);
-      	System.out.println("Report total occupancy and percentage of rooms occupied");
         try{
-          connectToDatabase();
-          statement.executeUpdate(";");
-          System.out.println("successfully!");
+	        connectToDatabase();
+	        Statement stmt = connection.createStatement();
+	        ResultSet rs = stmt.executeQuery("select count(*) as occupancy, (count(*)/(select count(*)from room))*100 as percentage from room where availability = 'No';");
+	        while (rs.next()) {
+	        	int occupancy = rs.getInt("occupancy");
+	        	Float percentage = rs.getFloat("percentage");
+	        	System.out.println("occupancy:"+occupancy+" percentage:"+percentage); 
+	        }
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
