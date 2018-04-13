@@ -559,12 +559,31 @@ public class HotelTables {
       }
 
       else if (choiceC==5) {
-      	Scanner thirdMenuChoice =new Scanner (System.in);
-      	System.out.println("Generate revenue earned by a given hotel during a given date range");
         try{
-          connectToDatabase();
-          statement.executeUpdate(";");
-          System.out.println("successfully!");
+        	Scanner thirdMenuChoice =new Scanner (System.in);
+	        System.out.printf("Input hotelID:");
+	        int hotelID=thirdMenuChoice.nextInt();
+	        System.out.printf("Input startdate:");
+	        Scanner fourthMenuChoice =new Scanner (System.in);
+	        String startdate =fourthMenuChoice.nextLine();
+	        System.out.printf("Input enddate:");
+	        String enddate =fourthMenuChoice.nextLine();
+	        	        
+	        connectToDatabase();
+	        Statement stmt = connection.createStatement();
+	        ResultSet rs1 = stmt.executeQuery("select sum((c.enddate-c.startdate)*r.nightlyrate) as roomfee from checkin c, room r "+
+	                                          "where c.roomnumber=r.roomnumber and c.hotelID=r.hotelID and c.startdate>'"+startdate+"' and c.enddate<'"+enddate+"' "+
+	                                          "and c.hotelID="+hotelID+";");
+	        ResultSet rs2 = stmt.executeQuery("select sum(s.fees) as servicesfee from checkin c, services s "+
+	                                          "where c.servicesoffered like concat('%',s.servicename,'%') and c.startdate>'"+startdate+"' and c.enddate<'"+enddate+"' "+
+	                                          "and c.hotelID="+hotelID+";");
+	        rs1.next();
+	        int roomfee=rs1.getInt("roomfee");
+	        rs2.next();
+	        int servicesfee=rs2.getInt("servicesfee");
+	        int totalfee=roomfee+servicesfee;
+	        System.out.println("The revenue earned by hotel "+hotelID+" during "+startdate+" and "+enddate+" is: "+totalfee); 
+
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
