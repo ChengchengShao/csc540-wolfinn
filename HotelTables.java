@@ -443,6 +443,7 @@ public class HotelTables {
       Scanner secondMenuChoice =new Scanner (System.in);
       choiceC = secondMenuChoice.nextInt();
       
+      //Report occupancy by hotel, room type, date range, and city
       if (choiceC==1){
        try{
 	        connectToDatabase();
@@ -503,6 +504,7 @@ public class HotelTables {
 
       }
 
+      //Report total occupancy and percentage of rooms occupie
       else if (choiceC==2) {
         try{
 	        connectToDatabase();
@@ -520,6 +522,7 @@ public class HotelTables {
         }
       }
 
+      //Return information on staff grouped by their role
       else if (choiceC==3) {
         try{
 	        connectToDatabase();
@@ -544,13 +547,22 @@ public class HotelTables {
         }
       }
       
+      //For each customer stay, return information on all the staff members serving the customer during the stay
       else if (choiceC==4) {
-      	Scanner thirdMenuChoice =new Scanner (System.in);
-      	System.out.println("For each customer stay, return information on all the staff members serving the customer during the stay");
         try{
-          connectToDatabase();
-          statement.executeUpdate(";");
-          System.out.println("successfully!");
+	        connectToDatabase();
+	        Statement stmt = connection.createStatement();
+	        ResultSet rs = stmt.executeQuery("select a.name as customername, c.servicename as servicename, d.name as staffname "+
+	        																 "from customer a,checkin b, servicestaff c, staff d "+
+	        																 "where a.customerID=b.customerID and b.servicesoffered like concat('%',c.servicename,'%') and c.staffID = d.staffID;");
+	       
+	        System.out.println("staffID customername  servicename  staffname"); 
+	        while (rs.next()) {
+	        	String customername = rs.getString("customername");
+	        	String servicename = rs.getString("servicename");
+	        	String staffname = rs.getString("staffname");
+	        	System.out.println(customername+" "+servicename+" "+staffname); 
+	        }
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -558,6 +570,7 @@ public class HotelTables {
         }
       }
 
+      //Generate revenue earned by a given hotel during a given date range
       else if (choiceC==5) {
         try{
         	Scanner thirdMenuChoice =new Scanner (System.in);
