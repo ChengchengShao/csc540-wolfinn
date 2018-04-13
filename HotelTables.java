@@ -433,7 +433,89 @@ public class HotelTables {
 
     
     private  static void reports(){
-      System.out.printf("Choose what you want to do with reports");
+      System.out.println("Choose what you want to do with reports:");
+      System.out.println("1.Report occupancy by hotel, room type, date range, and city");
+      System.out.println("2.Report total occupancy and percentage of rooms occupied");
+      System.out.println("3.Return information on staff grouped by their role");
+      System.out.println("4.For each customer stay, return information on all the staff members serving the customer during the stay");
+      System.out.println("5.Generate revenue earned by a given hotel during a given date range");
+      int choiceC;
+      Scanner secondMenuChoice =new Scanner (System.in);
+      choiceC = secondMenuChoice.nextInt();
+      
+      if (choiceC==1){
+        Scanner thirdMenuChoice =new Scanner (System.in);
+        System.out.println("Report occupancy by hotel, room type, date range, and city");
+        try{
+          connectToDatabase();
+          statement.executeUpdate(";");
+          System.out.println("successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+
+      else if (choiceC==2) {
+      	Scanner thirdMenuChoice =new Scanner (System.in);
+      	System.out.println("Report total occupancy and percentage of rooms occupied");
+        try{
+          connectToDatabase();
+          statement.executeUpdate(";");
+          System.out.println("successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+
+      else if (choiceC==3) {
+      	Scanner thirdMenuChoice =new Scanner (System.in);
+      	System.out.println("Return information on staff grouped by their role");
+        try{
+          connectToDatabase();
+          statement.executeUpdate(";");
+          System.out.println("successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+      
+      else if (choiceC==4) {
+      	Scanner thirdMenuChoice =new Scanner (System.in);
+      	System.out.println("For each customer stay, return information on all the staff members serving the customer during the stay");
+        try{
+          connectToDatabase();
+          statement.executeUpdate(";");
+          System.out.println("successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+
+      else if (choiceC==5) {
+      	Scanner thirdMenuChoice =new Scanner (System.in);
+      	System.out.println("Generate revenue earned by a given hotel during a given date range");
+        try{
+          connectToDatabase();
+          statement.executeUpdate(";");
+          System.out.println("successfully!");
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      }
+      
+      else{
+        mainmenu();
+      }
     }
     private  static void otherNumber(){
       System.out.printf("The wrong choice, please do again\n");
