@@ -580,7 +580,7 @@ public class HotelTables {
                                            "from customer a,checkin b, servicestaff c, staff d "+
                                            "where a.customerID=b.customerID and b.servicesoffered like concat('%',c.servicename,'%') and c.staffID = d.staffID;");
          
-          System.out.println("staffID customername  servicename  staffname"); 
+          System.out.println("customername  servicename  staffname"); 
           while (rs.next()) {
             String customername = rs.getString("customername");
             String servicename = rs.getString("servicename");
