@@ -191,6 +191,12 @@ public class HotelTables {
                     "servicename VARCHAR(128) PRIMARY KEY NOT NULL," +
                     "fees FLOAT(8,2) NOT NULL" +
                     ")");
+            statement.executeUpdate("CREATE TABLE servicestaff(" +
+                    "staffID INT NOT NULL," +
+                    "servicename VARCHAR(128) NOT NULL," +          
+                    "CONSTRAINT servicestaff_fk FOREIGN KEY(staffID) REFERENCES staff(staffID) " +
+                    "ON UPDATE CASCADE " +
+                    ")");
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -313,6 +319,23 @@ public class HotelTables {
         statement.executeUpdate("INSERT INTO services VALUES('gyms',15)");
         statement.executeUpdate("INSERT INTO services VALUES('room service',10)");
         statement.executeUpdate("INSERT INTO services VALUES('special requests',20)");
+      }
+      catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+
+    }
+
+    private static void insertservicestaff(){
+      try{
+        connectToDatabase();
+
+        statement.executeUpdate("INSERT INTO servicestaff VALUES(101, 'phone bills')");
+        statement.executeUpdate("INSERT INTO servicestaff VALUES(103, 'dry cleaning')");
+        statement.executeUpdate("INSERT INTO servicestaff VALUES(104, 'gyms')");
+        statement.executeUpdate("INSERT INTO servicestaff VALUES(102, 'room service')");
       }
       catch (ClassNotFoundException e) {
           e.printStackTrace();
@@ -879,6 +902,17 @@ private static void deleteInfo(){
           connectToDatabase();
           Statement stmt = connection.createStatement();
           stmt.execute("SET FOREIGN_KEY_CHECKS=0");
+    //transaction begins<<<<<<<<<<
+          try{
+            connection.setAutoCommit(false);
+            statement.executeUpdate("delete from hotel where hotelID ="+hotelID+"; ");
+            statement.executeUpdate("delete from room where hotelID ="+hotelID+"; ");
+            statement.executeUpdate("delete from staff where hotelID ="+hotelID+"; ");
+            connection.commit();
+          }catch(Exception e){
+            connection.rollback();
+          }
+    //transaction ends>>>>>>>>>>>>
           statement.executeUpdate("delete from hotel where hotelID ="+hotelID+"; ");
           statement.executeUpdate("delete from room where hotelID ="+hotelID+"; ");
           statement.executeUpdate("delete from staff where hotelID ="+hotelID+"; ");
@@ -1020,9 +1054,17 @@ private static void deleteInfo(){
 
       try{
         connectToDatabase();
-        statement.executeUpdate("INSERT INTO checkin VALUES"+" ('"+customerID+"','"+hotelID+"','"+roomnumber+"','"+numberofguests+"','"+startdate+"','"+enddate+"','"+checkintime+"','"+checkouttime+"','"+servicesoffered+"');");
+      //transaction begins<<<<<<<<<<<<
+        try{
+          connection.setAutoCommit(false);
+          statement.executeUpdate("INSERT INTO checkin VALUES"+" ('"+customerID+"','"+hotelID+"','"+roomnumber+"','"+numberofguests+"','"+startdate+"','"+enddate+"','"+checkintime+"','"+checkouttime+"','"+servicesoffered+"');");
+          statement.executeUpdate("UPDATE room SET availability ='No' WHERE roomnumber ='"+roomnumber+"';");
+          connection.commit();
+        }catch(Exception e){
+            connection.rollback();
+         }
+      //transaction ends>>>>>>>>>>>>>>
         System.out.println("checkinInfo been added successfully!");
-        statement.executeUpdate("UPDATE room SET availability ='No' WHERE roomnumber ='"+roomnumber+"';");
         System.out.println("Room"+roomnumber+"released!");
       }catch (ClassNotFoundException e) {
           e.printStackTrace();
