@@ -64,6 +64,7 @@ public class HotelTables {
       insertServices();
       insertstaff();
       insertcheckin();
+      insertservicestaff();
 
       //check whether all data have been loaded successfully
       try{
@@ -71,7 +72,7 @@ public class HotelTables {
         ResultSet rs=statement.executeQuery("select sum(table_rows) from tables where TABLE_SCHEMA = 'zsun12';");
         statement.executeUpdate("use zsun12;");
         rs.next();
-        if(rs.getInt(1)==34) {
+        if(rs.getInt(1)==38) {
           System.out.printf("All data have been loaded successfully!\n");
         }
         else {
@@ -101,7 +102,7 @@ public class HotelTables {
         statement.executeUpdate("DROP TABLE IF EXISTS services;");
         statement.executeUpdate("DROP TABLE IF EXISTS input;");
         statement.executeUpdate("DROP TABLE IF EXISTS customerHasCheckin;");
-        statement.executeUpdate("DROP TABLE IF EXISTS billingInfo;");
+        statement.executeUpdate("DROP TABLE IF EXISTS servicestaff;");
         statement.executeUpdate("DROP TABLE IF EXISTS paymentInfo;");
         statement.executeUpdate("DROP TABLE IF EXISTS billingInfo;");
         statement.executeUpdate("DROP TABLE IF EXISTS calculate;");
@@ -190,6 +191,12 @@ public class HotelTables {
             statement.executeUpdate("CREATE TABLE services(" +
                     "servicename VARCHAR(128) PRIMARY KEY NOT NULL," +
                     "fees FLOAT(8,2) NOT NULL" +
+                    ")");
+             statement.executeUpdate("CREATE TABLE servicestaff(" +
+                    "staffID INT NOT NULL," +
+                    "servicename VARCHAR(128) NOT NULL," +          
+                    "CONSTRAINT servicestaff_fk FOREIGN KEY(staffID) REFERENCES staff(staffID) " +
+                    "ON UPDATE CASCADE " +
                     ")");
 
         } catch (ClassNotFoundException e) {
@@ -322,6 +329,23 @@ public class HotelTables {
 
     }
 
+    private static void insertservicestaff(){
+      try{
+        connectToDatabase();
+
+        statement.executeUpdate("INSERT INTO servicestaff VALUES(101, 'phone bills')");
+        statement.executeUpdate("INSERT INTO servicestaff VALUES(103, 'dry cleaning')");
+        statement.executeUpdate("INSERT INTO servicestaff VALUES(104, 'gyms')");
+        statement.executeUpdate("INSERT INTO servicestaff VALUES(102, 'room service')");
+      }
+      catch (ClassNotFoundException e) {
+          e.printStackTrace();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
+
+    }
+
     private  static void informationProcessing(){
       System.out.printf("Choose what you want to do with informationProcessing:\n");
       System.out.printf("1.enterInfo\n");
@@ -443,27 +467,78 @@ public class HotelTables {
       Scanner secondMenuChoice =new Scanner (System.in);
       choiceC = secondMenuChoice.nextInt();
       
+      //Report occupancy by hotel, room type, date range, and city
       if (choiceC==1){
-        Scanner thirdMenuChoice =new Scanner (System.in);
-        System.out.println("Report occupancy by hotel, room type, date range, and city");
-        try{
+       try{
           connectToDatabase();
-          statement.executeUpdate(";");
-          System.out.println("successfully!");
+          Statement stmt = connection.createStatement();
+
+          ResultSet rs = stmt.executeQuery("select D.name as hotelname, if(C.B is null, 0, C.B) as occupancy from "+
+                                           "(select hotelID,count(*) as B from room where availability = 'No' group by hotelID) C "+
+                                           "right join (select * from hotel) D on C.hotelID=D.hotelID;");
+          System.out.println("************Report occupancy by hotel************"); 
+          while (rs.next()) {
+            String hotelname = rs.getString("hotelname");
+            int occupancy = rs.getInt("occupancy");
+            System.out.println(hotelname+" :"+occupancy); 
+          }
+    
+          rs = stmt.executeQuery("select D.A as roomcategory, if(C.B is null, 0, C.B) as occupancy from "+
+                                           "(select roomcategory as A,count(*) as B from room where availability = 'No' group by roomcategory) C "+
+                                           "right join (select distinct roomcategory as A from room) D on C.A=D.A;");
+          System.out.println("************Report occupancy by room type************"); 
+          while (rs.next()) {
+            String roomcategory = rs.getString("roomcategory");
+            int occupancy = rs.getInt("occupancy");
+            System.out.println(roomcategory+" :"+occupancy); 
+          }
+
+          rs = stmt.executeQuery("select selected_date, count(*) as occupancy from (select selected_date from  "+
+                                "(select adddate('1970-01-01',t4*10000 + t3*1000 + t2*100 + t1*10 + t0) selected_date from  "+
+                                "(select 0 t0 union select 1 union select 2 union select 3 union select 4 union select 5 union "+
+                                "select 6 union select 7 union select 8 union select 9) t0,  (select 0 t1 union select 1 union "+
+                                "select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union "+
+                                "select 8 union select 9) t1,  (select 0 t2 union select 1 union select 2 union select 3 union "+
+                                "select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,  (select 0 t3 union "+
+                                "select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union "
+                                +"select 8 union select 9) t3,  (select 0 t4 union select 1 union select 2 union select 3 union select 4 union "+
+                                "select 5 union select 6 union select 7 union select 8 union select 9) t4) v, "+
+                                "checkin where selected_date between checkin.startdate and checkin.enddate) X group by selected_date;");
+          System.out.println("************Report occupancy by daterange************"); 
+          while (rs.next()) {
+            String selected_date = rs.getString("selected_date");
+            int occupancy = rs.getInt("occupancy");
+            System.out.println(selected_date+" :"+occupancy); 
+          }
+          
+          rs = stmt.executeQuery("select D.address as city, if(C.B is null, 0, C.B) as occupancy from  "+
+                                "(select hotelID,count(*) as B from room where availability = 'No' group by hotelID) C  "+
+                                "right join (select * from hotel) D on C.hotelID=D.hotelID;");
+          System.out.println("************Report occupancy by city************"); 
+          while (rs.next()) {
+            String city = rs.getString("city");
+            int occupancy = rs.getInt("occupancy");
+            System.out.println(city+" :"+occupancy); 
+          }
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
       }
 
+      //Report total occupancy and percentage of rooms occupie
       else if (choiceC==2) {
-      	Scanner thirdMenuChoice =new Scanner (System.in);
-      	System.out.println("Report total occupancy and percentage of rooms occupied");
         try{
           connectToDatabase();
-          statement.executeUpdate(";");
-          System.out.println("successfully!");
+          Statement stmt = connection.createStatement();
+          ResultSet rs = stmt.executeQuery("select count(*) as occupancy, (count(*)/(select count(*)from room))*100 as percentage from room where availability = 'No';");
+          while (rs.next()) {
+            int occupancy = rs.getInt("occupancy");
+            Float percentage = rs.getFloat("percentage");
+            System.out.println("occupancy:"+occupancy+" percentage:"+percentage); 
+          }
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -471,13 +546,24 @@ public class HotelTables {
         }
       }
 
+      //Return information on staff grouped by their role
       else if (choiceC==3) {
-      	Scanner thirdMenuChoice =new Scanner (System.in);
-      	System.out.println("Return information on staff grouped by their role");
         try{
           connectToDatabase();
-          statement.executeUpdate(";");
-          System.out.println("successfully!");
+          Statement stmt = connection.createStatement();
+          ResultSet rs = stmt.executeQuery("select * from staff order by jobtitle;");
+          System.out.println("staffID name age jobtitle hotelID department phonenumber address"); 
+          while (rs.next()) {
+            int staffID = rs.getInt("staffID");
+            String name = rs.getString("name");
+            int age = rs.getInt("age");
+            String jobtitle = rs.getString("jobtitle");
+            int hotelID = rs.getInt("hotelID");
+            String department = rs.getString("department");
+            int phonenumber = rs.getInt("phonenumber");
+            String address = rs.getString("address");
+            System.out.println(""+staffID+" "+name+" "+age+" "+jobtitle+" "+hotelID+" "+department+" "+phonenumber+" "+address); 
+          }
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -485,13 +571,22 @@ public class HotelTables {
         }
       }
       
+      //For each customer stay, return information on all the staff members serving the customer during the stay
       else if (choiceC==4) {
-      	Scanner thirdMenuChoice =new Scanner (System.in);
-      	System.out.println("For each customer stay, return information on all the staff members serving the customer during the stay");
         try{
           connectToDatabase();
-          statement.executeUpdate(";");
-          System.out.println("successfully!");
+          Statement stmt = connection.createStatement();
+          ResultSet rs = stmt.executeQuery("select a.name as customername, c.servicename as servicename, d.name as staffname "+
+                                           "from customer a,checkin b, servicestaff c, staff d "+
+                                           "where a.customerID=b.customerID and b.servicesoffered like concat('%',c.servicename,'%') and c.staffID = d.staffID;");
+         
+          System.out.println("staffID customername  servicename  staffname"); 
+          while (rs.next()) {
+            String customername = rs.getString("customername");
+            String servicename = rs.getString("servicename");
+            String staffname = rs.getString("staffname");
+            System.out.println(customername+" "+servicename+" "+staffname); 
+          }
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -499,13 +594,33 @@ public class HotelTables {
         }
       }
 
+      //Generate revenue earned by a given hotel during a given date range
       else if (choiceC==5) {
-      	Scanner thirdMenuChoice =new Scanner (System.in);
-      	System.out.println("Generate revenue earned by a given hotel during a given date range");
         try{
+          Scanner thirdMenuChoice =new Scanner (System.in);
+          System.out.printf("Input hotelID:");
+          int hotelID=thirdMenuChoice.nextInt();
+          System.out.printf("Input startdate:");
+          Scanner fourthMenuChoice =new Scanner (System.in);
+          String startdate =fourthMenuChoice.nextLine();
+          System.out.printf("Input enddate:");
+          String enddate =fourthMenuChoice.nextLine();
+                    
           connectToDatabase();
-          statement.executeUpdate(";");
-          System.out.println("successfully!");
+          Statement stmt = connection.createStatement();
+          ResultSet rs1 = stmt.executeQuery("select sum((c.enddate-c.startdate)*r.nightlyrate) as roomfee from checkin c, room r "+
+                                            "where c.roomnumber=r.roomnumber and c.hotelID=r.hotelID and c.startdate>'"+startdate+"' and c.enddate<'"+enddate+"' "+
+                                            "and c.hotelID="+hotelID+";");
+          ResultSet rs2 = stmt.executeQuery("select sum(s.fees) as servicesfee from checkin c, services s "+
+                                            "where c.servicesoffered like concat('%',s.servicename,'%') and c.startdate>'"+startdate+"' and c.enddate<'"+enddate+"' "+
+                                            "and c.hotelID="+hotelID+";");
+          rs1.next();
+          int roomfee=rs1.getInt("roomfee");
+          rs2.next();
+          int servicesfee=rs2.getInt("servicesfee");
+          int totalfee=roomfee+servicesfee;
+          System.out.println("The revenue earned by hotel "+hotelID+" during "+startdate+" and "+enddate+" is: "+totalfee); 
+
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -788,9 +903,17 @@ private static void deleteInfo(){
           connectToDatabase();
           Statement stmt = connection.createStatement();
           stmt.execute("SET FOREIGN_KEY_CHECKS=0");
-          statement.executeUpdate("delete from hotel where hotelID ="+hotelID+"; ");
-          statement.executeUpdate("delete from room where hotelID ="+hotelID+"; ");
-          statement.executeUpdate("delete from staff where hotelID ="+hotelID+"; ");
+    //transaction begins<<<<<<<<<<
+          try{
+            connection.setAutoCommit(false);
+            statement.executeUpdate("delete from hotel where hotelID ="+hotelID+"; ");
+            statement.executeUpdate("delete from room where hotelID ="+hotelID+"; ");
+            statement.executeUpdate("delete from staff where hotelID ="+hotelID+"; ");
+            connection.commit();
+          }catch(Exception e){
+            connection.rollback();
+          }
+    //transaction ends>>>>>>>>>>>>
           System.out.println("info of hotel hotelid "+hotelID+" has been deleted successfully");
           System.out.println("info of room and staff with hotelid "+hotelID+" has also been deleted ");
         }catch (ClassNotFoundException e) {
@@ -929,9 +1052,17 @@ private static void deleteInfo(){
 
       try{
         connectToDatabase();
-        statement.executeUpdate("INSERT INTO checkin VALUES"+" ('"+customerID+"','"+hotelID+"','"+roomnumber+"','"+numberofguests+"','"+startdate+"','"+enddate+"','"+checkintime+"','"+checkouttime+"','"+servicesoffered+"');");
+      //transaction begins<<<<<<<<<<<<
+        try{
+          connection.setAutoCommit(false);
+          statement.executeUpdate("INSERT INTO checkin VALUES"+" ('"+customerID+"','"+hotelID+"','"+roomnumber+"','"+numberofguests+"','"+startdate+"','"+enddate+"','"+checkintime+"','"+checkouttime+"','"+servicesoffered+"');");
+          statement.executeUpdate("UPDATE room SET availability ='No' WHERE roomnumber ='"+roomnumber+"';");
+          connection.commit();
+        }catch(Exception e){
+            connection.rollback();
+         }
+      //transaction ends>>>>>>>>>>>>>>
         System.out.println("checkinInfo been added successfully!");
-        statement.executeUpdate("UPDATE room SET availability ='No' WHERE roomnumber ='"+roomnumber+"';");
         System.out.println("Room"+roomnumber+"released!");
       }catch (ClassNotFoundException e) {
           e.printStackTrace();
