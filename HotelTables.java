@@ -64,7 +64,6 @@ public class HotelTables {
       insertServices();
       insertstaff();
       insertcheckin();
-      insertservicestaff();
 
       //check whether all data have been loaded successfully
       try{
@@ -72,7 +71,7 @@ public class HotelTables {
         ResultSet rs=statement.executeQuery("select sum(table_rows) from tables where TABLE_SCHEMA = 'zsun12';");
         statement.executeUpdate("use zsun12;");
         rs.next();
-        if(rs.getInt(1)==38) {
+        if(rs.getInt(1)==34) {
           System.out.printf("All data have been loaded successfully!\n");
         }
         else {
@@ -102,7 +101,7 @@ public class HotelTables {
         statement.executeUpdate("DROP TABLE IF EXISTS services;");
         statement.executeUpdate("DROP TABLE IF EXISTS input;");
         statement.executeUpdate("DROP TABLE IF EXISTS customerHasCheckin;");
-        statement.executeUpdate("DROP TABLE IF EXISTS servicestaff;");
+        statement.executeUpdate("DROP TABLE IF EXISTS billingInfo;");
         statement.executeUpdate("DROP TABLE IF EXISTS paymentInfo;");
         statement.executeUpdate("DROP TABLE IF EXISTS billingInfo;");
         statement.executeUpdate("DROP TABLE IF EXISTS calculate;");
@@ -191,12 +190,6 @@ public class HotelTables {
             statement.executeUpdate("CREATE TABLE services(" +
                     "servicename VARCHAR(128) PRIMARY KEY NOT NULL," +
                     "fees FLOAT(8,2) NOT NULL" +
-                    ")");
-             statement.executeUpdate("CREATE TABLE servicestaff(" +
-                    "staffID INT NOT NULL," +
-                    "servicename VARCHAR(128) NOT NULL," +          
-                    "CONSTRAINT servicestaff_fk FOREIGN KEY(staffID) REFERENCES staff(staffID) " +
-                    "ON UPDATE CASCADE " +
                     ")");
 
         } catch (ClassNotFoundException e) {
@@ -329,23 +322,6 @@ public class HotelTables {
 
     }
 
-    private static void insertservicestaff(){
-      try{
-        connectToDatabase();
-
-        statement.executeUpdate("INSERT INTO servicestaff VALUES(101, 'phone bills')");
-        statement.executeUpdate("INSERT INTO servicestaff VALUES(103, 'dry cleaning')");
-        statement.executeUpdate("INSERT INTO servicestaff VALUES(104, 'gyms')");
-        statement.executeUpdate("INSERT INTO servicestaff VALUES(102, 'room service')");
-      }
-      catch (ClassNotFoundException e) {
-          e.printStackTrace();
-      } catch (SQLException e) {
-          e.printStackTrace();
-      }
-
-    }
-
     private  static void informationProcessing(){
       System.out.printf("Choose what you want to do with informationProcessing:\n");
       System.out.printf("1.enterInfo\n");
@@ -467,7 +443,7 @@ public class HotelTables {
       Scanner secondMenuChoice =new Scanner (System.in);
       choiceC = secondMenuChoice.nextInt();
       
-       //Report occupancy by hotel, room type, date range, and city
+      //Report occupancy by hotel, room type, date range, and city
       if (choiceC==1){
        try{
           connectToDatabase();
@@ -597,7 +573,6 @@ public class HotelTables {
       //Generate revenue earned by a given hotel during a given date range
       else if (choiceC==5) {
         try{
-<<<<<<< HEAD
           Scanner thirdMenuChoice =new Scanner (System.in);
           System.out.printf("Input hotelID:");
           int hotelID=thirdMenuChoice.nextInt();
@@ -621,31 +596,6 @@ public class HotelTables {
           int servicesfee=rs2.getInt("servicesfee");
           int totalfee=roomfee+servicesfee;
           System.out.println("The revenue earned by hotel "+hotelID+" during "+startdate+" and "+enddate+" is: "+totalfee); 
-=======
-        	Scanner thirdMenuChoice =new Scanner (System.in);
-	        System.out.printf("Input hotelID:");
-	        int hotelID=thirdMenuChoice.nextInt();
-	        System.out.printf("Input startdate:");
-	        Scanner fourthMenuChoice =new Scanner (System.in);
-	        String startdate =fourthMenuChoice.nextLine();
-	        System.out.printf("Input enddate:");
-	        String enddate =fourthMenuChoice.nextLine();
-	        	        
-	        connectToDatabase();
-	        Statement stmt = connection.createStatement();
-	        ResultSet rs1 = stmt.executeQuery("select sum((c.enddate-c.startdate)*r.nightlyrate) as roomfee from checkin c, room r "+
-	                                          "where c.roomnumber=r.roomnumber and c.hotelID=r.hotelID and c.startdate>'"+startdate+"' and c.enddate<'"+enddate+"' "+
-	                                          "and c.hotelID="+hotelID+";");
-	        ResultSet rs2 = stmt.executeQuery("select sum(s.fees) as servicesfee from checkin c, services s "+
-	                                          "where c.servicesoffered like concat('%',s.servicename,'%') and c.startdate>'"+startdate+"' and c.enddate<'"+enddate+"' "+
-	                                          "and c.hotelID="+hotelID+";");
-	        rs1.next();
-	        int roomfee=rs1.getInt("roomfee");
-	        rs2.next();
-	        int servicesfee=rs2.getInt("servicesfee");
-	        int totalfee=roomfee+servicesfee;
-	        System.out.println("The revenue earned by hotel "+hotelID+" during "+startdate+" and "+enddate+" is: "+totalfee); 
->>>>>>> 37444bb3f860e4ad1852fec6f5b63ef46432bbe2
 
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -929,17 +879,9 @@ private static void deleteInfo(){
           connectToDatabase();
           Statement stmt = connection.createStatement();
           stmt.execute("SET FOREIGN_KEY_CHECKS=0");
-    //transaction begins<<<<<<<<<<
-          try{
-            connection.setAutoCommit(false);
-            statement.executeUpdate("delete from hotel where hotelID ="+hotelID+"; ");
-            statement.executeUpdate("delete from room where hotelID ="+hotelID+"; ");
-            statement.executeUpdate("delete from staff where hotelID ="+hotelID+"; ");
-            connection.commit();
-          }catch(Exception e){
-            connection.rollback();
-          }
-    //transaction ends>>>>>>>>>>>>
+          statement.executeUpdate("delete from hotel where hotelID ="+hotelID+"; ");
+          statement.executeUpdate("delete from room where hotelID ="+hotelID+"; ");
+          statement.executeUpdate("delete from staff where hotelID ="+hotelID+"; ");
           System.out.println("info of hotel hotelid "+hotelID+" has been deleted successfully");
           System.out.println("info of room and staff with hotelid "+hotelID+" has also been deleted ");
         }catch (ClassNotFoundException e) {
@@ -1078,17 +1020,9 @@ private static void deleteInfo(){
 
       try{
         connectToDatabase();
-      //transaction begins<<<<<<<<<<<<
-        try{
-          connection.setAutoCommit(false);
-          statement.executeUpdate("INSERT INTO checkin VALUES"+" ('"+customerID+"','"+hotelID+"','"+roomnumber+"','"+numberofguests+"','"+startdate+"','"+enddate+"','"+checkintime+"','"+checkouttime+"','"+servicesoffered+"');");
-          statement.executeUpdate("UPDATE room SET availability ='No' WHERE roomnumber ='"+roomnumber+"';");
-          connection.commit();
-        }catch(Exception e){
-            connection.rollback();
-         }
-      //transaction ends>>>>>>>>>>>>>>
+        statement.executeUpdate("INSERT INTO checkin VALUES"+" ('"+customerID+"','"+hotelID+"','"+roomnumber+"','"+numberofguests+"','"+startdate+"','"+enddate+"','"+checkintime+"','"+checkouttime+"','"+servicesoffered+"');");
         System.out.println("checkinInfo been added successfully!");
+        statement.executeUpdate("UPDATE room SET availability ='No' WHERE roomnumber ='"+roomnumber+"';");
         System.out.println("Room"+roomnumber+"released!");
       }catch (ClassNotFoundException e) {
           e.printStackTrace();
