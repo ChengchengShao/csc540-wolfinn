@@ -64,6 +64,7 @@ public class HotelTables {
       insertServices();
       insertstaff();
       insertcheckin();
+      insertservicestaff();
 
       //check whether all data have been loaded successfully
       try{
