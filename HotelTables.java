@@ -499,7 +499,7 @@ public class HotelTables {
         Scanner secondMenuChoice = new Scanner(System.in);
         choiceC = secondMenuChoice.nextInt();
 
-                                                                                                              //Report occupancy by hotel, room type, date range, and city
+        //Report occupancy by hotel, room type, date range, and city
         if (choiceC == 1) {
             try {
                 connectToDatabase();
@@ -516,7 +516,7 @@ public class HotelTables {
                 while (rs.next()) {
                     String hotelname = rs.getString("hotelname");
                     int occupancy = rs.getInt("occupancy");
-                    System.out.println(hotelname + " :" + occupancy);
+                    System.out.println(hotelname + ":\t" + occupancy);
                 }
 
                 rs = stmt.executeQuery(
@@ -524,12 +524,12 @@ public class HotelTables {
                                 "(select roomcategory as A,count(*) as B from room where availability = 'No' group by roomcategory) C " +
                                 "right join (select distinct roomcategory as A from room) D on C.A=D.A;");
                 System.out.println(
-                        "************Report occupancy by room type************");
+                        "**********Report occupancy by room type**********");
 
                 while (rs.next()) {
                     String roomcategory = rs.getString("roomcategory");
                     int occupancy = rs.getInt("occupancy");
-                    System.out.println(roomcategory + " :" + occupancy);
+                    System.out.println(roomcategory + ":\t" + occupancy);
                 }
 
                 rs = stmt.executeQuery(
@@ -545,12 +545,12 @@ public class HotelTables {
                                 "select 5 union select 6 union select 7 union select 8 union select 9) t4) v, " +
                                 "checkin where selected_date between checkin.startdate and checkin.enddate) X group by selected_date;");
                 System.out.println(
-                        "************Report occupancy by daterange************");
+                        "**********Report occupancy by daterange**********");
 
                 while (rs.next()) {
                     String selected_date = rs.getString("selected_date");
                     int occupancy = rs.getInt("occupancy");
-                    System.out.println(selected_date + " :" + occupancy);
+                    System.out.println(selected_date + ":\t" + occupancy);
                 }
 
                 rs = stmt.executeQuery(
@@ -558,20 +558,22 @@ public class HotelTables {
                                 "(select hotelID,count(*) as B from room where availability = 'No' group by hotelID) C  " +
                                 "right join (select * from hotel) D on C.hotelID=D.hotelID;");
                 System.out.println(
-                        "************Report occupancy by city************");
+                        "************Report occupancy by city*************");
 
                 while (rs.next()) {
                     String city = rs.getString("city");
                     int occupancy = rs.getInt("occupancy");
-                    System.out.println(city + " :" + occupancy);
+                    System.out.println(city + ":\t" + occupancy);
                 }
+                System.out.println(
+                        "*************************************************\n");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-                                                                                                          //Report total occupancy and percentage of rooms occupie
+        //Report total occupancy and percentage of rooms occupie
         else if (choiceC == 2) {
             try {
                 connectToDatabase();
@@ -579,20 +581,24 @@ public class HotelTables {
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(
                         "select count(*) as occupancy, (count(*)/(select count(*)from room))*100 as percentage from room where availability = 'No';");
-
+                System.out.println(
+                        "******Report total occupancy and percentage******");
+                        
                 while (rs.next()) {
                     int occupancy = rs.getInt("occupancy");
                     Float percentage = rs.getFloat("percentage");
                     System.out.println("occupancy:" + occupancy +
                             " percentage:" + percentage);
                 }
+                System.out.println(
+                        "*************************************************\n");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-                                                                                                     //Return information on staff grouped by their role
+        //Return information on staff grouped by their role
         else if (choiceC == 3) {
             try {
                 connectToDatabase();
@@ -601,7 +607,9 @@ public class HotelTables {
                 ResultSet rs = stmt.executeQuery(
                         "select * from staff order by jobtitle;");
                 System.out.println(
-                        "staffID name age jobtitle hotelID department phonenumber address");
+                        "**************************************Report staff information************************************");
+                System.out.println(
+                        "ID  name \tage jobtitle\thotelID\tdepartment\tphonenumber\taddress");
 
                 while (rs.next()) {
                     int staffID = rs.getInt("staffID");
@@ -612,17 +620,19 @@ public class HotelTables {
                     String department = rs.getString("department");
                     int phonenumber = rs.getInt("phonenumber");
                     String address = rs.getString("address");
-                    System.out.println("" + staffID + " " + name + " " + age +
-                            " " + jobtitle + " " + hotelID + " " + department +
-                            " " + phonenumber + " " + address);
+                    System.out.println(staffID + " " + name + " \t" + age +
+                            "  " + jobtitle + "\t" + hotelID + "\t" + department +
+                            "\t" + phonenumber + "\t" + address);
                 }
+                System.out.println(
+                        "**************************************************************************************************\n");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-                                                                                                        //For each customer stay, return information on all the staff members serving the customer during the stay
+        //For each customer stay, return information on all the staff members serving the customer during the stay
         else if (choiceC == 4) {
             try {
                 connectToDatabase();
@@ -633,23 +643,27 @@ public class HotelTables {
                                 "from customer a,checkin b, servicestaff c, staff d " +
                                 "where a.customerID=b.customerID and b.servicesoffered like concat('%',c.servicename,'%') and c.staffID = d.staffID;");
 
-                System.out.println("customername  servicename  staffname");
+                System.out.println(
+                        "***Return service staff info for each customer***");
+                System.out.println("customername\tservicename\tstaffname");
 
                 while (rs.next()) {
                     String customername = rs.getString("customername");
                     String servicename = rs.getString("servicename");
                     String staffname = rs.getString("staffname");
-                    System.out.println(customername + " " + servicename + " " +
+                    System.out.println(customername + "    \t" + servicename + " \t" +
                             staffname);
                 }
+                System.out.println(
+                        "*************************************************\n");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-
-        else if (choiceC == 5) {                                                                 //Generate revenue earned by a given hotel during a given date range
+        //Generate revenue earned by a given hotel during a given date range
+        else if (choiceC == 5) {
             try {
                 Scanner thirdMenuChoice = new Scanner(System.in);
                 System.out.printf("Input hotelID:");
@@ -668,13 +682,13 @@ public class HotelTables {
                 Statement stmt = connection.createStatement();
                 ResultSet rs1 = stmt.executeQuery(
                         "select sum((c.enddate-c.startdate)*r.nightlyrate) as roomfee from checkin c, room r " +
-                                "where c.roomnumber=r.roomnumber and c.hotelID=r.hotelID and c.startdate>'" +
-                                startdate + "' and c.enddate<'" + enddate + "' " +
+                                "where c.roomnumber=r.roomnumber and c.hotelID=r.hotelID and c.startdate>='" +
+                                startdate + "' and c.enddate<='" + enddate + "' " +
                                 "and c.hotelID=" + hotelID + ";");
                 ResultSet rs2 = stmt.executeQuery(
                         "select sum(s.fees) as servicesfee from checkin c, services s " +
-                                "where c.servicesoffered like concat('%',s.servicename,'%') and c.startdate>'" +
-                                startdate + "' and c.enddate<'" + enddate + "' " +
+                                "where c.servicesoffered like concat('%',s.servicename,'%') and c.startdate>='" +
+                                startdate + "' and c.enddate<='" + enddate + "' " +
                                 "and c.hotelID=" + hotelID + ";");
                 rs1.next();
 
@@ -683,9 +697,13 @@ public class HotelTables {
 
                 int servicesfee = rs2.getInt("servicesfee");
                 int totalfee = roomfee + servicesfee;
+                System.out.println(
+                        "********revenue earned by a given hotel during a given date range********");
                 System.out.println("The revenue earned by hotel " + hotelID +
                         " during " + startdate + " and " + enddate + " is: " +
                         totalfee);
+                System.out.println(
+                        "*************************************************************************\n");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
@@ -696,7 +714,7 @@ public class HotelTables {
             mainmenu();
         }
     }
-
+    
     private static void otherNumber() {
         System.out.printf("The wrong choice, please do again\n");
     }
