@@ -12,11 +12,11 @@ public class HotelTables {
     private static Connection connection = null;
     private static Statement statement = null;
     private static ResultSet result = null;
-    private static boolean end = false; //stop the main menu loop
+    private static boolean end = false;                                                  //stop the main menu loop
     Scanner infoProcessMenuChoice = new Scanner(System.in);
 
     public static void main(String[] args) {
-        initialize();
+        initialize();                                                                    //Drop tables, create tables, insert data in to tabkes.
 
         while (!end) {
             mainmenu();
@@ -26,7 +26,7 @@ public class HotelTables {
         close();
     }
 
-    private static void mainmenu() {
+    private static void mainmenu() {                                                    //Main menu which can be used to several functions.
         System.out.printf(
                 "Welcome to Team F Wolf Inn! Please choose what you  want to do:\n");
         System.out.printf("1.Information Processing\n");
@@ -65,8 +65,8 @@ public class HotelTables {
         insertcheckin();
         insertservicestaff();
 
-        //check whether all data have been loaded successfully
-        try {
+
+        try {                                                                              //check whether all data have been loaded successfully
             statement.executeUpdate("use information_schema;");
 
             ResultSet rs = statement.executeQuery(
@@ -85,9 +85,9 @@ public class HotelTables {
         }
     }
 
-    private static void dropTables() {
+    private static void dropTables() {                                                    //Drop tables just in case there are tabkes with sam names existiong.
         try {
-            connectToDatabase();
+            connectToDatabase();                                                         //Whenever needed to execute query, connectToDatabase first is necessary.
             statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
             statement.executeUpdate("DROP TABLE IF EXISTS hotel;");
             statement.executeUpdate("DROP TABLE IF EXISTS room;");
@@ -347,7 +347,7 @@ public class HotelTables {
         }
     }
 
-    private static void informationProcessing() {
+    private static void informationProcessing() {                                    //informationProcessing  menu
         System.out.printf(
                 "Choose what you want to do with informationProcessing:\n");
         System.out.printf("1.enterInfo\n");
@@ -499,7 +499,7 @@ public class HotelTables {
         Scanner secondMenuChoice = new Scanner(System.in);
         choiceC = secondMenuChoice.nextInt();
 
-        //Report occupancy by hotel, room type, date range, and city
+                                                                                                              //Report occupancy by hotel, room type, date range, and city
         if (choiceC == 1) {
             try {
                 connectToDatabase();
@@ -571,7 +571,7 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        //Report total occupancy and percentage of rooms occupie
+                                                                                                          //Report total occupancy and percentage of rooms occupie
         else if (choiceC == 2) {
             try {
                 connectToDatabase();
@@ -592,7 +592,7 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        //Return information on staff grouped by their role
+                                                                                                     //Return information on staff grouped by their role
         else if (choiceC == 3) {
             try {
                 connectToDatabase();
@@ -622,7 +622,7 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        //For each customer stay, return information on all the staff members serving the customer during the stay
+                                                                                                        //For each customer stay, return information on all the staff members serving the customer during the stay
         else if (choiceC == 4) {
             try {
                 connectToDatabase();
@@ -648,8 +648,8 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        //Generate revenue earned by a given hotel during a given date range
-        else if (choiceC == 5) {
+
+        else if (choiceC == 5) {                                                                 //Generate revenue earned by a given hotel during a given date range
             try {
                 Scanner thirdMenuChoice = new Scanner(System.in);
                 System.out.printf("Input hotelID:");
@@ -870,8 +870,8 @@ public class HotelTables {
         Scanner secondMenuChoice = new Scanner(System.in);
         choiceC = secondMenuChoice.nextInt();
 
-        //update hotel
-        if (choiceC == 1) {
+
+        if (choiceC == 1) {                                                                //Update hotel
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.printf("Input hotelID:");
 
@@ -905,8 +905,8 @@ public class HotelTables {
             }
         }
 
-        //update room
-        if (choiceC == 2) {
+
+        if (choiceC == 2) {                                                               //update room
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.printf("Input roomnumber:");
 
@@ -945,8 +945,8 @@ public class HotelTables {
             }
         }
 
-        //update staff
-        if (choiceC == 3) {
+
+        if (choiceC == 3) {                                                                 //Update staff info.
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.printf("Input staffID:");
 
@@ -1029,7 +1029,7 @@ public class HotelTables {
         }
     }
 
-    private static void deleteInfo() {
+    private static void deleteInfo() {                                                   //delete information in tables.
         System.out.println(
                 "Choose which table are you going to delete info on:");
         System.out.println("1.hotel");
@@ -1053,7 +1053,7 @@ public class HotelTables {
                 Statement stmt = connection.createStatement();
                 stmt.execute("SET FOREIGN_KEY_CHECKS=0");
 
-                //transaction begins<<<<<<<<<<
+                                                                                         //transaction begins<<<<<<<<<<
                 try {
                     connection.setAutoCommit(false);
                     statement.executeUpdate("delete from hotel where hotelID =" +
@@ -1067,7 +1067,7 @@ public class HotelTables {
                     connection.rollback();
                 }
 
-                //transaction ends>>>>>>>>>>>>
+                                                                                        //transaction ends>>>>>>>>>>>>
                 statement.executeUpdate("delete from hotel where hotelID =" +
                         hotelID + "; ");
                 statement.executeUpdate("delete from room where hotelID =" +
@@ -1163,12 +1163,11 @@ public class HotelTables {
         Scanner secondMenuChoice = new Scanner(System.in);
         choiceD = secondMenuChoice.nextInt();
 
-        if (choiceD == 1) {
-            System.out.println("roomnumber?:\n");
-
+        if (choiceD == 1) {                                                           //since roomnumber can be the same in different hotels, so the hotelID is needed.
+            System.out.println("roomnumber?");
             Scanner thirdMenuChoice = new Scanner(System.in);
             int roomID = thirdMenuChoice.nextInt();
-            System.out.println("Which hotel?:\n");
+            System.out.println("Which hotel?:");
 
             int hotelID = thirdMenuChoice.nextInt();
 
@@ -1251,7 +1250,7 @@ public class HotelTables {
         try {
             connectToDatabase();
 
-            //transaction begins<<<<<<<<<<<<
+                                                                                    //transaction begins<<<<<<<<<<<<
             try {
                 connection.setAutoCommit(false);
                 statement.executeUpdate("INSERT INTO checkin VALUES" + " ('" +
@@ -1267,7 +1266,7 @@ public class HotelTables {
                 connection.rollback();
             }
 
-            //transaction ends>>>>>>>>>>>>>>
+                                                                                   //transaction ends>>>>>>>>>>>>>>
             System.out.println("checkinInfo been added successfully!");
             System.out.println("Room" + roomnumber + "released!");
         } catch (ClassNotFoundException e) {
@@ -1277,7 +1276,7 @@ public class HotelTables {
         }
     }
 
-    private static void connectToDatabase()
+    private static void connectToDatabase()                                        //function to connect to database//
             throws ClassNotFoundException, SQLException {
         Class.forName("org.mariadb.jdbc.Driver");
 
