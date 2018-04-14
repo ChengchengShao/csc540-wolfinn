@@ -71,7 +71,7 @@ public class HotelTables {
         ResultSet rs=statement.executeQuery("select sum(table_rows) from tables where TABLE_SCHEMA = 'zsun12';");
         statement.executeUpdate("use zsun12;");
         rs.next();
-        if(rs.getInt(1)==34) {
+        if(rs.getInt(1)==38) {
           System.out.printf("All data have been loaded successfully!\n");
         }
         else {
@@ -100,7 +100,7 @@ public class HotelTables {
         statement.executeUpdate("DROP TABLE IF EXISTS assign;");
         statement.executeUpdate("DROP TABLE IF EXISTS services;");
         statement.executeUpdate("DROP TABLE IF EXISTS input;");
-        statement.executeUpdate("DROP TABLE IF EXISTS customerHasCheckin;");
+        statement.executeUpdate("DROP TABLE IF EXISTS servicestaff;");
         statement.executeUpdate("DROP TABLE IF EXISTS billingInfo;");
         statement.executeUpdate("DROP TABLE IF EXISTS paymentInfo;");
         statement.executeUpdate("DROP TABLE IF EXISTS billingInfo;");
