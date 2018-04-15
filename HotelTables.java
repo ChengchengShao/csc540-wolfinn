@@ -12,7 +12,7 @@ public class HotelTables {
     private static Connection connection = null;
     private static Statement statement = null;
     private static ResultSet result = null;
-    private static boolean end = false;                                                  //stop the main menu loop
+    private static boolean end = false;                                             //stop the main menu loop
     Scanner infoProcessMenuChoice = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -125,7 +125,7 @@ public class HotelTables {
                     "hotelID INT PRIMARY KEY," + "name VARCHAR(128) NOT NULL," +
                     "address VARCHAR(128) NOT NULL," +
                     "phonenumber VARCHAR(128) NOT NULL," +
-                    "managerID VARCHAR(128) NOT NULL" + ")");
+                    "managerID VARCHAR(128) NOT NULL" +")");
             statement.executeUpdate("CREATE TABLE room (" +
                     "roomnumber INT NOT NULL," + "hotelID INT NOT NULL," +
                     "roomcategory VARCHAR(128) NOT NULL," +
@@ -155,7 +155,7 @@ public class HotelTables {
                     "startdate DATE NOT NULL, " + "enddate DATE NOT NULL, " +
                     "checkintime DATETIME NOT NULL, " +
                     "checkouttime DATETIME NOT NULL, " +
-                    "servicesoffered VARCHAR(128) NOT NULL, " +
+                    "servicesoffered VARCHAR(128) , " +
                     "CONSTRAINT checkin_customer_fk FOREIGN KEY(customerID) REFERENCES customer(customerID) " +
                     "ON UPDATE CASCADE, " +
                     "CONSTRAINT checkin_hotel_fk FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) " +
@@ -354,9 +354,10 @@ public class HotelTables {
         System.out.printf("2.updateInfo\n");
         System.out.printf("3.deleteInfo\n");
         System.out.printf("4.roomRequest\n");
-        System.out.printf("5.Assign and realease Room\n");
-        System.out.printf("6.Back to main menu\n");
-        System.out.printf("7.Exit\n");
+        System.out.printf("5.Assign room\n");
+        System.out.printf("6.Realease Room\n");
+        System.out.printf("7.Back to main menu\n");
+        System.out.printf("8.Exit\n");
 
         int choiceB;
         Scanner secondMenuChoice = new Scanner(System.in);
@@ -371,10 +372,14 @@ public class HotelTables {
         } else if (choiceB == 4) {
             roomRequest();
         } else if (choiceB == 5) {
-            assignAndRealeaseRoom();
-        } else if (choiceB == 6) {
+            assignRoom();
+        }
+          else if (choiceB== 6) {
+            releaseRoom();
+        }
+        else if (choiceB == 7) {
             mainmenu();
-        } else if (choiceB == 7) {
+        } else if (choiceB == 8) {
             end = true;
         } else {
             otherNumber();
@@ -583,7 +588,7 @@ public class HotelTables {
                         "select count(*) as occupancy, (count(*)/(select count(*)from room))*100 as percentage from room where availability = 'No';");
                 System.out.println(
                         "******Report total occupancy and percentage******");
-                        
+
                 while (rs.next()) {
                     int occupancy = rs.getInt("occupancy");
                     Float percentage = rs.getFloat("percentage");
@@ -714,7 +719,7 @@ public class HotelTables {
             mainmenu();
         }
     }
-    
+
     private static void otherNumber() {
         System.out.printf("The wrong choice, please do again\n");
     }
@@ -1194,11 +1199,11 @@ public class HotelTables {
 
                 ResultSet result = statement.executeQuery(
                         "select count(*) from room where roomnumber='" +
-                                roomID + "'and hotelID='" + hotelID + "';");
+                                roomID + "'and hotelID='" + hotelID + "'and availability='Yes';");
 
                 while (result.next()) {
-                    String a = result.getString(1);
-                    System.out.println("The number of available room is " + a);
+                    String b = result.getString(1);
+                    System.out.println("The number of available room is " + b);
                 }
 
                 mainmenu();
@@ -1221,8 +1226,8 @@ public class HotelTables {
                                 roomcategory + "'and availability='Yes';");
 
                 while (result.next()) {
-                    String a = result.getString(1);
-                    System.out.println("The number of available room is " + a);
+                    String b = result.getString(1);
+                    System.out.println("The number of available room is " + b);
                 }
 
                 mainmenu();
@@ -1234,7 +1239,7 @@ public class HotelTables {
         }
     }
 
-    private static void assignAndRealeaseRoom() {
+    private static void assignRoom() {
         Scanner secondMenuChoice = new Scanner(System.in);
         Scanner thirdMenuChoice = new Scanner(System.in);
         System.out.println("Please enter the customerID:");
@@ -1271,6 +1276,7 @@ public class HotelTables {
                                                                                     //transaction begins<<<<<<<<<<<<
             try {
                 connection.setAutoCommit(false);
+
                 statement.executeUpdate("INSERT INTO checkin VALUES" + " ('" +
                         customerID + "','" + hotelID + "','" + roomnumber + "','" +
                         numberofguests + "','" + startdate + "','" + enddate +
@@ -1278,16 +1284,39 @@ public class HotelTables {
                         servicesoffered + "');");
                 statement.executeUpdate(
                         "UPDATE room SET availability ='No' WHERE roomnumber ='" +
-                                roomnumber + "';");
+                                roomnumber + "'and hotelID='"+hotelID+"';");
                 connection.commit();
             } catch (Exception e) {
                 connection.rollback();
+                System.out.println("Info invalid,please recheck!");
+                informationProcessing();
+
             }
 
-                                                                                   //transaction ends>>>>>>>>>>>>>>
+                                                                         //transaction ends>>>>>>>>>>>>>>
             System.out.println("checkinInfo been added successfully!");
-            System.out.println("Room" + roomnumber + "released!");
+            System.out.println("Room " + roomnumber + " assigned!");
+
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void releaseRoom(){
+        Scanner secondMenuChoice = new Scanner(System.in);
+        System.out.println("Please enter the roomnumber");
+        int roomnumber = secondMenuChoice.nextInt();
+        System.out.println("Please enter the hotelID");
+        int hotelID = secondMenuChoice.nextInt();
+        try {
+          connectToDatabase();
+          statement.executeUpdate("UPDATE room SET availability ='Yes' WHERE roomnumber ='" +
+                roomnumber + "'and hotelID='"+hotelID+"';");
+        System.out.println("room "+roomnumber+" has been released!");
+
+        }catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
