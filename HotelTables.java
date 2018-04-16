@@ -12,7 +12,9 @@ public class HotelTables {
     private static Connection connection = null;
     private static Statement statement = null;
     private static ResultSet result = null;
-    private static boolean end = false;                                             //stop the main menu loop
+    private static boolean end = false;                                                  //stop the main menu loop
+    private static int abc =0;
+    private static int abd =0;
     Scanner infoProcessMenuChoice = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -1272,11 +1274,19 @@ public class HotelTables {
 
         try {
             connectToDatabase();
-
-                                                                                    //transaction begins<<<<<<<<<<<<
-            try {
-                connection.setAutoCommit(false);
-
+            ResultSet result =statement.executeQuery("select count(*) as total from room where roomnumber ='" +roomnumber + "'and hotelID='"+hotelID+"';");
+                while(result.next()){
+                   abc = result.getInt("total");
+                }
+                  if (abc ==0){
+                    System.out.println("Info invalid,please recheck!");
+                    informationProcessing();
+                  }
+                  else{
+                    try{
+                      System.out.println("checkinInfo been added successfully!");
+                      System.out.println("Room " + roomnumber + " in hotel "+hotelID+" assigned!");
+                    connection.setAutoCommit(false);
                 statement.executeUpdate("INSERT INTO checkin VALUES" + " ('" +
                         customerID + "','" + hotelID + "','" + roomnumber + "','" +
                         numberofguests + "','" + startdate + "','" + enddate +
@@ -1288,16 +1298,12 @@ public class HotelTables {
                 connection.commit();
             } catch (Exception e) {
                 connection.rollback();
-                System.out.println("Info invalid,please recheck!");
-                informationProcessing();
-
             }
+          }
 
-                                                                         //transaction ends>>>>>>>>>>>>>>
-            System.out.println("checkinInfo been added successfully!");
-            System.out.println("Room " + roomnumber + " assigned!");
 
-        } catch (ClassNotFoundException e) {
+
+      } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1312,9 +1318,26 @@ public class HotelTables {
         int hotelID = secondMenuChoice.nextInt();
         try {
           connectToDatabase();
+          ResultSet result =statement.executeQuery("select count(*) as total from room where roomnumber ='" +roomnumber + "'and hotelID='"+hotelID+"';");
+              while(result.next()){
+                 abd = result.getInt("total");
+              }
+                if (abd ==0){
+                  System.out.println("Info invalid,please recheck!");
+                  informationProcessing();
+                }
+                else{
+                  try{
+                    System.out.println("room "+roomnumber+" in hotel "+hotelID+" has been released!");
+                    connection.setAutoCommit(false);
           statement.executeUpdate("UPDATE room SET availability ='Yes' WHERE roomnumber ='" +
                 roomnumber + "'and hotelID='"+hotelID+"';");
-        System.out.println("room "+roomnumber+" has been released!");
+                connection.commit();
+
+        }catch (Exception e) {
+            connection.rollback();
+        }
+      }
 
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
