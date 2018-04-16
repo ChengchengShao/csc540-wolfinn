@@ -1081,7 +1081,7 @@ public class HotelTables {
                                                                                          //transaction begins<<<<<<<<<<
                 try {
                     connection.setAutoCommit(false);                                     //set auto commit to false
-                    statement.executeUpdate("delete from hotel where hotelID =" +   
+                    statement.executeUpdate("delete from hotel where hotelID =" +
                             hotelID + "; ");
                     statement.executeUpdate("delete from room where hotelID =" +         //if a hotel is deleted, the room and staff info in it should be deleted
                             hotelID + "; ");
@@ -1286,9 +1286,9 @@ public class HotelTables {
                     try{
                       System.out.println("checkinInfo been added successfully!");
                       System.out.println("Room " + roomnumber + " in hotel "+hotelID+" assigned!");
-                    connection.setAutoCommit(false);
+                    connection.setAutoCommit(false);                                    //transaction begins<<<<<<<<<<
                 statement.executeUpdate("INSERT INTO checkin VALUES" + " ('" +
-                        customerID + "','" + hotelID + "','" + roomnumber + "','" +     //if a room is assigned to a customer 
+                        customerID + "','" + hotelID + "','" + roomnumber + "','" +     //if a room is assigned to a customer
                         numberofguests + "','" + startdate + "','" + enddate +          //then the room availability has to be set to no the same time
                         "','" + checkintime + "','" + checkouttime + "','" +
                         servicesoffered + "');");
@@ -1297,25 +1297,11 @@ public class HotelTables {
                                 roomnumber + "'and hotelID='"+hotelID+"';");
                 connection.commit();
             } catch (Exception e) {
-<<<<<<< HEAD
+
                 connection.rollback();
-=======
-                connection.rollback();                                                  //if these three queries did not all execute successfully,
-                System.out.println("Info invalid,please recheck!");                     //then roll back and print warning
-                informationProcessing();
-
->>>>>>> e51656d61d931733706abb7fc489dd331a6d025c
-            }
-          }
-
-<<<<<<< HEAD
-=======
-                                                                                    //transaction ends>>>>>>>>>>>>>>
-            System.out.println("checkinInfo been added successfully!");
-            System.out.println("Room " + roomnumber + " assigned!");
->>>>>>> e51656d61d931733706abb7fc489dd331a6d025c
-
-
+              }
+            }                                                                            //transaction ends>>>>>>>>>>>>>>
+             System.out.println("checkinInfo been added successfully!");
       } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
