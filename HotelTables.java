@@ -116,7 +116,7 @@ public class HotelTables {
         }
     }
 
-    private static void createTables() {
+    private static void createTables() {                                                //create all tables
         try {
             connectToDatabase();
             dropTables();
@@ -183,7 +183,7 @@ public class HotelTables {
             e.printStackTrace();
         }
     }
-
+                                                                                        //insert the data into all tables
     private static void insertHotelTable() {
         try {
             connectToDatabase();
@@ -347,7 +347,7 @@ public class HotelTables {
         }
     }
 
-    private static void informationProcessing() {                                    //informationProcessing  menu
+    private static void informationProcessing() {                                    //informationProcessing  function menu
         System.out.printf(
                 "Choose what you want to do with informationProcessing:\n");
         System.out.printf("1.enterInfo\n");
@@ -386,7 +386,7 @@ public class HotelTables {
         }
     }
 
-    private static void maintainingServiceRecords() {
+    private static void maintainingServiceRecords() {                           //maintain service records function menu
         System.out.printf(
                 "Choose what you want to do with maintainingServiceRecords:\n");
         System.out.printf("1.enterInfo\n");
@@ -487,7 +487,7 @@ public class HotelTables {
         }
     }
 
-    private static void reports() {
+    private static void reports() {                                             //report function menu
         System.out.println("Choose what you want to do with reports:");
         System.out.println(
                 "1.Report occupancy by hotel, room type, date range, and city");
@@ -504,7 +504,7 @@ public class HotelTables {
         Scanner secondMenuChoice = new Scanner(System.in);
         choiceC = secondMenuChoice.nextInt();
 
-        //Report occupancy by hotel, room type, date range, and city
+                                                                            //Report occupancy by hotel, room type, date range, and city
         if (choiceC == 1) {
             try {
                 connectToDatabase();
@@ -578,7 +578,7 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        //Report total occupancy and percentage of rooms occupie
+                                                                            //Report total occupancy and percentage of rooms occupie
         else if (choiceC == 2) {
             try {
                 connectToDatabase();
@@ -603,7 +603,7 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        //Return information on staff grouped by their role
+                                                                             //Return information on staff grouped by their role
         else if (choiceC == 3) {
             try {
                 connectToDatabase();
@@ -637,7 +637,7 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        //For each customer stay, return information on all the staff members serving the customer during the stay
+                                                                            //For each customer stay, return information on all the staff members serving the customer during the stay
         else if (choiceC == 4) {
             try {
                 connectToDatabase();
@@ -667,7 +667,7 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        //Generate revenue earned by a given hotel during a given date range
+                                                                            //Generate revenue earned by a given hotel during a given date range
         else if (choiceC == 5) {
             try {
                 Scanner thirdMenuChoice = new Scanner(System.in);
@@ -724,7 +724,7 @@ public class HotelTables {
         System.out.printf("The wrong choice, please do again\n");
     }
 
-    private static void enterInfo() {
+    private static void enterInfo() {                                                   //enter info to the chosen table
         System.out.println("Choose which table are you going to modify:");
         System.out.println("1.Hotel");
         System.out.println("2.room");
@@ -735,7 +735,7 @@ public class HotelTables {
         Scanner secondMenuChoice = new Scanner(System.in);
         choiceC = secondMenuChoice.nextInt();
 
-        if (choiceC == 1) {
+        if (choiceC == 1) {                                                             //enter info in hotel
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.printf("Input hotelID:");
 
@@ -767,7 +767,7 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        else if (choiceC == 2) {
+        else if (choiceC == 2) {                                                            //enter info in room
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.printf("Input roomnumber:");
 
@@ -803,7 +803,7 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        else if (choiceC == 3) {
+        else if (choiceC == 3) {                                                            //enter info in staff
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.printf("Input staffID:");
 
@@ -845,7 +845,7 @@ public class HotelTables {
                 e.printStackTrace();
             }
         }
-        else if (choiceC == 4) {
+        else if (choiceC == 4) {                                                              //enter info in customer
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.printf("Input customerID:");
 
@@ -882,7 +882,7 @@ public class HotelTables {
         }
     }
 
-    private static void updateInfo() {
+    private static void updateInfo() {                                                      //update info in the chosen table
         System.out.println("Choose which table are you going to update:");
         System.out.println("1.Hotel");
         System.out.println("2.room");
@@ -1013,7 +1013,7 @@ public class HotelTables {
             }
         }
 
-        //update customer
+                                                                                        //update customer
         if (choiceC == 4) {
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.printf("Input customerID:");
@@ -1064,7 +1064,7 @@ public class HotelTables {
         Scanner secondMenuChoice = new Scanner(System.in);
         choiceD = secondMenuChoice.nextInt();
 
-        if (choiceD == 1) {
+        if (choiceD == 1) {                                                             //delete information in hotel
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.println("enter the hotelID to delete its info");
 
@@ -1078,15 +1078,15 @@ public class HotelTables {
 
                                                                                          //transaction begins<<<<<<<<<<
                 try {
-                    connection.setAutoCommit(false);
-                    statement.executeUpdate("delete from hotel where hotelID =" +
+                    connection.setAutoCommit(false);                                     //set auto commit to false
+                    statement.executeUpdate("delete from hotel where hotelID =" +   
                             hotelID + "; ");
-                    statement.executeUpdate("delete from room where hotelID =" +
+                    statement.executeUpdate("delete from room where hotelID =" +         //if a hotel is deleted, the room and staff info in it should be deleted
                             hotelID + "; ");
-                    statement.executeUpdate("delete from staff where hotelID =" +
+                    statement.executeUpdate("delete from staff where hotelID =" +        //then roll back
                             hotelID + "; ");
                     connection.commit();
-                } catch (Exception e) {
+                } catch (Exception e) {                                                 //if these three queries did not all execute successfully,
                     connection.rollback();
                 }
 
@@ -1108,7 +1108,7 @@ public class HotelTables {
             }
         }
 
-        if (choiceD == 2) {
+        if (choiceD == 2) {                                                               //delete information in room
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.println("enter the roomID to delete its info");
 
@@ -1130,7 +1130,7 @@ public class HotelTables {
             }
         }
 
-        if (choiceD == 3) {
+        if (choiceD == 3) {                                                              //delete information in staff
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.println("enter the staffID to delete its info");
 
@@ -1152,7 +1152,7 @@ public class HotelTables {
             }
         }
 
-        if (choiceD == 4) {
+        if (choiceD == 4) {                                                                 // //delete information in customer
             Scanner thirdMenuChoice = new Scanner(System.in);
             System.out.println("enter the customerID to delete its info");
 
@@ -1239,7 +1239,7 @@ public class HotelTables {
         }
     }
 
-    private static void assignRoom() {
+    private static void assignRoom() {                                                      //assign room to the customer
         Scanner secondMenuChoice = new Scanner(System.in);
         Scanner thirdMenuChoice = new Scanner(System.in);
         System.out.println("Please enter the customerID:");
@@ -1278,8 +1278,8 @@ public class HotelTables {
                 connection.setAutoCommit(false);
 
                 statement.executeUpdate("INSERT INTO checkin VALUES" + " ('" +
-                        customerID + "','" + hotelID + "','" + roomnumber + "','" +
-                        numberofguests + "','" + startdate + "','" + enddate +
+                        customerID + "','" + hotelID + "','" + roomnumber + "','" +     //if a room is assigned to a customer 
+                        numberofguests + "','" + startdate + "','" + enddate +          //then the room availability has to be set to no the same time
                         "','" + checkintime + "','" + checkouttime + "','" +
                         servicesoffered + "');");
                 statement.executeUpdate(
@@ -1287,13 +1287,13 @@ public class HotelTables {
                                 roomnumber + "'and hotelID='"+hotelID+"';");
                 connection.commit();
             } catch (Exception e) {
-                connection.rollback();
-                System.out.println("Info invalid,please recheck!");
+                connection.rollback();                                                  //if these three queries did not all execute successfully,
+                System.out.println("Info invalid,please recheck!");                     //then roll back and print warning
                 informationProcessing();
 
             }
 
-                                                                         //transaction ends>>>>>>>>>>>>>>
+                                                                                    //transaction ends>>>>>>>>>>>>>>
             System.out.println("checkinInfo been added successfully!");
             System.out.println("Room " + roomnumber + " assigned!");
 
@@ -1304,7 +1304,7 @@ public class HotelTables {
         }
     }
 
-    private static void releaseRoom(){
+    private static void releaseRoom(){                                              //release room from the customer
         Scanner secondMenuChoice = new Scanner(System.in);
         System.out.println("Please enter the roomnumber");
         int roomnumber = secondMenuChoice.nextInt();
